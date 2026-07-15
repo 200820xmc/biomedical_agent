@@ -1,0 +1,22 @@
+{
+  "run_id": "20260715_184942",
+  "local_files": {
+    "total_files": 39,
+    "suspected_duplicates": 2,
+    "total_chars": 2231900
+  },
+  "milvus": {
+    "ok": true,
+    "entity_count": 308,
+    "unique_sources": 30,
+    "avg_chunks_per_source": 10.3,
+    "chunk_length": {
+      "min": 354,
+      "avg": 4473.9,
+      "median": 4735.5,
+      "p95": 4794.0,
+      "max": 4799
+    },
+    "error": null
+  }
+}

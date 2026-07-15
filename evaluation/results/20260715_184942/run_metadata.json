@@ -1,0 +1,13 @@
+{
+  "run_id": "20260715_184942",
+  "started_at": "2026-07-15T18:49:42.082850+08:00",
+  "finished_at": "2026-07-15T18:49:42.247532+08:00",
+  "python_version": "3.13.3",
+  "platform": "Windows-11",
+  "collection_name": "biz",
+  "embedding_model": "text-embedding-v4",
+  "vector_dimension": 1024,
+  "question_file": "N/A",
+  "question_file_sha256": "",
+  "status": "completed"
+}
