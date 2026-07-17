@@ -1,0 +1,55 @@
+{
+  "generation_version": "evidence_first_extractive_v1",
+  "question_count": 50,
+  "unique_question_count": 50,
+  "unique_document_count": 50,
+  "reference_answer_count": 0,
+  "pending_human_review_count": 50,
+  "automatic_evidence_check_pass_count": 50,
+  "context_length": {
+    "min": 222,
+    "max": 2400,
+    "mean": 2008.72
+  },
+  "category_counts": {
+    "AI与信号处理": 10,
+    "临床定义": 1,
+    "临床指南": 1,
+    "临床管理": 3,
+    "医学影像": 1,
+    "卫生经济学": 1,
+    "声传播机制": 4,
+    "声学监测": 9,
+    "流行病学": 2,
+    "血流动力学与几何": 12,
+    "计算声学": 5,
+    "计算流体力学": 1
+  },
+  "question_type_counts": {
+    "comparison": 8,
+    "evidence_synthesis": 1,
+    "explanation": 1,
+    "extractive": 11,
+    "mechanism": 7,
+    "method": 8,
+    "method_and_result": 6,
+    "quantitative": 6,
+    "temporal": 2
+  },
+  "recommended_metrics_before_reference_review": [
+    "id_based_context_precision",
+    "id_based_context_recall",
+    "context_utilization",
+    "faithfulness",
+    "response_relevancy"
+  ],
+  "metrics_requiring_reviewed_reference_or_claims": [
+    "context_recall",
+    "answer_correctness"
+  ],
+  "files": {
+    "dataset": "evaluation/ragas_50_dataset.jsonl",
+    "manifest": "evaluation/ragas_50_manifest.jsonl",
+    "review": "evaluation/ragas_50_review.csv"
+  }
+}

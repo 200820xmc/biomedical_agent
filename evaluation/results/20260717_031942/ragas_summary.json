@@ -1,0 +1,8 @@
+{
+  "run_id": "20260717_031942",
+  "ran_at": "2026-07-17T03:19:42.819297+08:00",
+  "question_file": "evaluation/questions_v2.csv",
+  "question_count": 5,
+  "framework": "RAGAS-style (custom LLM judge)",
+  "metrics": {}
+}

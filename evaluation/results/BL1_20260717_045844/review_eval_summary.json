@@ -1,0 +1,38 @@
+{
+  "run_id": "BL1_20260717_045844",
+  "ran_at": "2026-07-17T04:58:44.235407+08:00",
+  "review_csv": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_actual_chunk_review.csv",
+  "question_count": 3,
+  "id_based_metrics": {
+    "Doc-Hit": "3/3 = 100.0%",
+    "Doc-Hit@1": 0.6667,
+    "Doc-Hit@3": 1.0,
+    "Doc-Hit@5": 1.0,
+    "Doc-Hit@10": 1.0,
+    "Doc_mean_rank": 1.7,
+    "Chunk-Hit": "2/3",
+    "Chunk_mean_rank": 3.0
+  },
+  "ragas_metrics": {
+    "faithfulness": {
+      "mean": 0.9259,
+      "min": 0.7778,
+      "max": 1.0,
+      "count": 3
+    },
+    "answer_relevancy": {
+      "mean": 0.9306,
+      "min": 0.8837,
+      "max": 0.9685,
+      "count": 3
+    }
+  },
+  "notes": [
+    "Evaluation variant: BL-1 Dense Top-5 unique chunks",
+    "ID-based Hit@K: 标注的真实 Milvus 逻辑 chunk ID 是否在检索结果中",
+    "Faithfulness: RAGAS LLM评判",
+    "Response Relevancy: RAGAS LLM评判",
+    "Context Recall: 待人工审核参考答案后启用",
+    "答案正确性: 待人工审核后启用"
+  ]
+}

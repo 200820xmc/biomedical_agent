@@ -1,0 +1,22 @@
+{
+  "run_id": "20260717_034629",
+  "ran_at": "2026-07-17T03:46:29.277119+08:00",
+  "review_csv": "C:\\Users\\Ming\\AppData\\Local\\Temp\\_review5.csv",
+  "question_count": 5,
+  "id_based_metrics": {
+    "ID-Precision_hits": "0/5",
+    "ID-Precision@1": 0.0,
+    "ID-Precision@3": 0.0,
+    "ID-Precision@5": 0.0,
+    "ID-Precision@10": 0.0,
+    "mean_rank": null
+  },
+  "ragas_metrics": {},
+  "notes": [
+    "ID-based Context Precision: 标注chunk是否在检索结果中",
+    "Faithfulness: RAGAS LLM评判",
+    "Response Relevancy: RAGAS LLM评判",
+    "Context Recall: 待人工审核参考答案后启用",
+    "答案正确性: 待人工审核后启用"
+  ]
+}

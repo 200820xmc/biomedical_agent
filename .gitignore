@@ -60,7 +60,18 @@ volumes/
 
 # Uploads
 uploads/
+PDF/
 *.tmp
+
+# Evaluation artifacts containing extracted paper text or full model traces
+# Keep evaluation code and compact *_summary.json files publishable.
+evaluation/ragas_50_dataset.jsonl
+evaluation/ragas_50_manifest.jsonl
+evaluation/ragas_50_review.csv
+evaluation/ragas_50_actual_chunks.jsonl
+evaluation/ragas_50_actual_chunk_mapping.jsonl
+evaluation/ragas_50_actual_chunk_review.csv
+evaluation/results/*/*_details.csv
 
 # OS
 .DS_Store
@@ -78,4 +89,3 @@ dmypy.json
 
 # Ruff
 .ruff_cache/
-

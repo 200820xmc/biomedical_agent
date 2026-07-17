@@ -1,426 +1,283 @@
 # AVF Research Assistant
 
-> 面向动静脉瘘（Arteriovenous Fistula, AVF）科研与教学场景的 RAG 文献检索和智能问答系统
+> 面向科研文献的智能检索与问答 RAG Agent 平台
 
-[![Python](https://img.shields.io/badge/Python-3.11--3.13-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![LangGraph](https://img.shields.io/badge/Agent-LangGraph-1C3C3C)](https://www.langchain.com/langgraph)
-[![Milvus](https://img.shields.io/badge/Milvus-2.5-00A1EA)](https://milvus.io/)
-[![Evaluation](https://img.shields.io/badge/Evaluation-90%20tests%20passed-brightgreen)](evaluation/README.md)
+AVF Research Assistant 面向动静脉瘘（Arteriovenous Fistula，AVF）科研、教学和算法验证场景。系统支持 PDF、Markdown 和 TXT 文献入库，由 Agent 调用知识检索工具，通过 Milvus 超额召回、LLM Rerank、来源多样性选择和上下文预算控制生成带来源引用的回答。
 
-AVF Research Assistant 是一个围绕 AVF 狭窄、血流声音、血流动力学和深度学习研究构建的医学科研文献助手。系统将论文转换为向量知识库，由 LangGraph Agent 调用检索工具，再使用通义千问基于论文内容生成带来源引用的回答。
+> 使用边界：系统输出不构成临床诊断或治疗建议，不能替代医生或专业医疗人员的判断。
 
-> **使用声明**：本平台生成的内容仅用于科研、教学和算法验证，不构成临床诊断意见，也不能替代医生或专业医疗人员的判断。
+## 核心能力
 
-## 项目亮点
-
-- **完整 RAG 链路**：文献上传、标题感知分块、向量化、Milvus 存储、语义检索和回答生成。
-- **工具调用 Agent**：基于 LangGraph 和 ChatQwen 构建单 Agent，通过知识检索和时间工具完成任务。
-- **论文级检索去重**：先召回 Top-15 分片，再按论文来源去重，减少同一论文占据多个结果位置。
-- **流式交互**：FastAPI 提供 REST API，前端通过 SSE 实时渲染模型回答。
-- **多轮会话**：使用 LangGraph `MemorySaver` 按 `session_id` 保存对话上下文。
-- **可量化评测**：提供知识库盘点、Hit@K、Recall@K、去重对比、引用核验、TTFT 和索引性能评测脚本。
-- **可追溯引用**：根据论文文件名生成 `(Author et al. Year)` 引用标签，并将检索来源传递给 Agent。
-
-## 真实评测结果
-
-以下结果来自 2026-07-15 的实际运行，详细明细见 [EVALUATION_RESULTS.md](evaluation/results/EVALUATION_RESULTS.md)。评测使用中文学术问题，不代表临床有效性，也不代表知识库更新后的永久表现。
-
-### 知识库快照
-
-| 指标 | 结果 |
-|---|---:|
-| Milvus 入库论文来源 | 30 篇 |
-| 文本分片 | 308 个 |
-| 平均分片数 | 10.3 个/篇 |
-| 平均分片长度 | 4,474 字符 |
-| 嵌入模型 | text-embedding-v4（1024 维） |
-
-### 检索效果
-
-评测集包含 **25 道人工标注问题、10 个科研子方向和 93 条相关论文标注**。
-
-| 指标 | @1 | @3 | @5 | @10 |
-|---|---:|---:|---:|---:|
-| Hit@K | 52.0% | 72.0% | 76.0% | 84.0% |
-| Recall@K | 16.9% | 34.9% | 42.5% | 62.1% |
-
-`Hit@5 = 76%` 表示 25 道问题中有 19 道在前 5 个结果中至少找到了一篇人工标注的相关论文。
-
-### 论文级去重优化
-
-对比“直接返回 Top-5 分片”和“Top-15 候选分片召回后按论文去重”：
-
-| 指标 | 基线 | 论文级去重 | 变化 |
-|---|---:|---:|---:|
-| Top-5 平均来源覆盖数 | 3.00 篇 | 4.76 篇 | +58.7% |
-| 重复来源占比 | 40.0% | 4.8% | -35.2 个百分点 |
-| Hit@5 | 76.0% | 88.0% | +12.0 个百分点 |
-| Recall@5 | 42.5% | 62.1% | +19.6 个百分点 |
-
-### 当前评测边界
-
-- 引用有效率和人工引用支持率尚未执行正式批量评测；
-- SSE 的 TTFT 和完整响应时间尚未执行正式批量评测；
-- 索引性能目前只完成 dry-run 分块统计，未将 dry-run 时间描述为完整索引耗时；
-- 检索评测直接调用向量存储，不包含 Agent 是否调用工具和如何改写查询的影响；
-- GitHub 仓库不包含本地论文原文和 Milvus 持久化数据。
+- **工具调用 Agent**：基于 LangChain `create_agent`、LangGraph Checkpointer 和通义千问构建单 Agent 工作流，支持知识检索、PDF 入库、入库状态查询和时间查询。
+- **多格式文献入库**：MD/TXT 上传后直接分块并索引；PDF 上传后先登记原文，再由 Agent 显式提交 xParse 异步解析与索引任务。
+- **两阶段检索**：Dense Top-50 超额召回，经过精确 Chunk 去重、LLM Rerank Top-20、相关性阈值、来源多样性选择和相邻 Chunk 扩展后构建上下文。
+- **稳定证据标识**：新入库数据使用 `{document_id}:{sha256(content)[:16]}` 作为逻辑 `chunk_id`，并保存 `source_id`、`chunk_index` 和 `content_hash`。
+- **可追溯回答**：上下文包含证据、章节、作者—年份引用和来源文件；检索 Artifact 可供前端、日志和评测复用。
+- **流式与会话**：FastAPI 提供普通问答和 SSE 流式问答，`MemorySaver` 按 `session_id` 保存进程内多轮上下文。
+- **可重复评测**：保留25题论文级检索消融实验，并新增50题、真实 Milvus Chunk ID 的 Agent 全链路评测与 BL-1 基线评测入口。
 
 ## 系统架构
 
 ```mermaid
 flowchart TD
-    U["用户 / Web 界面"] --> API["FastAPI API"]
-    API --> AGENT["LangGraph RAG Agent"]
-    AGENT --> LLM["通义千问 qwen-max"]
-    AGENT --> TOOLS["本地工具"]
-    TOOLS --> RETRIEVE["知识检索工具"]
-    RETRIEVE --> VS["Milvus Vector Store"]
-    VS --> EMB["text-embedding-v4 / 1024 维"]
+    U["用户 / Web"] --> API["FastAPI"]
+    API --> AGENT["RAG Agent"]
+    AGENT --> KTOOL["知识检索工具"]
+    AGENT --> PTOOL["PDF 入库工具"]
+    AGENT --> TTOOL["时间工具"]
 
-    DOC["Markdown / TXT 文献"] --> SPLIT["标题感知分块"]
-    SPLIT --> EMB
-    EMB --> VS
+    KTOOL --> RECALL["Milvus Dense Top-50"]
+    RECALL --> DEDUP["精确 Chunk 去重"]
+    DEDUP --> RERANK["LLM Rerank Top-20"]
+    RERANK --> FILTER["相关性阈值 0.65"]
+    FILTER --> DIVERSITY["来源多样性选择"]
+    DIVERSITY --> EXPAND["相邻 Chunk 扩展"]
+    EXPAND --> CONTEXT["上下文预算与引用构建"]
+    CONTEXT --> AGENT
 
-    API --> SSE["SSE 流式响应"]
+    PDF["PDF"] --> UPLOAD["保存原文并生成 document_id"]
+    UPLOAD --> PTOOL
+    PTOOL --> XPARSE["xParse → Markdown"]
+    XPARSE --> SPLIT["标题感知分块"]
+    MDTXT["Markdown / TXT"] --> SPLIT
+    SPLIT --> EMB["text-embedding-v4"]
+    EMB --> MILVUS["Milvus"]
+    MILVUS --> RECALL
+
+    AGENT --> SSE["JSON / SSE"]
     SSE --> U
 ```
 
-### 问答数据流
+## 处理流程
+
+### 问答链路
 
 ```text
 用户问题
-  → FastAPI 接收请求
-  → LangGraph Agent 理解任务
-  → 调用知识检索工具
-  → 查询向量化并检索 Top-15 候选分片
-  → 按论文来源去重，保留 Top-5 论文
-  → 将论文片段和引用标签交给通义千问
-  → 通过普通 JSON 或 SSE 返回回答
+  → Agent 判断是否调用知识检索工具
+  → Milvus Dense Top-50 超额召回
+  → chunk_id / content_hash / 正文精确去重
+  → LLM Rerank Top-20
+  → 0.65 相关性阈值过滤
+  → 最终证据选择（默认8个、每个来源最多2个）
+  → 对Top-3高分证据尝试相邻Chunk扩展
+  → 在12,000字符预算内构建引用上下文
+  → Agent 基于证据生成回答
+  → JSON或SSE返回
 ```
 
-### 文献入库数据流
+### 文献入库链路
+
+MD/TXT：
 
 ```text
-上传 .md/.txt
-  → 校验类型和大小
-  → 保存至 uploads/
-  → 按 Markdown 标题和字符长度分块
-  → DashScope Embedding 生成 1024 维向量
-  → 写入 Milvus biz collection
+上传文件 → UTF-8读取 → 标题/字符分块 → Embedding → Milvus
 ```
+
+PDF：
+
+```text
+上传PDF
+  → 文件头与大小校验
+  → 保存 uploads/originals/{document_id}/
+  → 返回 uploaded（此时尚未入库）
+  → 用户明确要求后，Agent提交后台任务
+  → queued → parsing → parsed → splitting → embedding → indexed
+  → 任务状态保存到 uploads/jobs/{job_id}.json
+```
+
+PDF 只有在状态为 `indexed` 时才可视为已进入知识库。
+
+## 当前检索配置
+
+| 参数 | 默认值 | 说明 |
+|---|---:|---|
+| `RAG_CANDIDATE_K` | 50 | Dense 超额召回候选数 |
+| `RAG_RERANK_K` | 20 | LLM Rerank 后保留数 |
+| `RAG_RERANK_THRESHOLD` | 0.65 | 进入最终选择的最低 Rerank 分数 |
+| `RAG_FINAL_CHUNKS` | 8 | 默认最终证据目标数 |
+| `RAG_MAX_CHUNKS_PER_SOURCE` | 2 | 每个来源最多选择的 Chunk 数 |
+| `RAG_MAX_CONTEXT_CHARS` | 12000 | 最终上下文字符预算 |
+| `RAG_MAX_CHARS_PER_EVIDENCE` | 1600 | 预算不足时单条证据的截断上限 |
+| `CHUNK_MAX_SIZE` | 1600 | 基础配置；当前二次字符分割器实际使用其2倍 |
+| `CHUNK_OVERLAP` | 200 | 字符分割重叠量 |
+
+注意：当前 `DocumentSplitterService` 的递归分割器使用 `chunk_size * 2`，所以配置1600时实际二次分割目标上限约为3200字符；`RAG_MAX_CHARS_PER_EVIDENCE` 也不是对所有完整证据强制截断，只有完整证据无法放入剩余总预算时才应用。
+
+## 评测结果
+
+### 最新50题全链路评测
+
+结果文件：[evaluation/results/20260717_045223/review_eval_summary.json](evaluation/results/20260717_045223/review_eval_summary.json)
+
+| 指标 | 结果 |
+|---|---:|
+| 题目数 | 50 |
+| 执行成功 | 50/50 |
+| 工具调用率 | 100% |
+| 空答案率 | 0% |
+| Doc-Hit | 49/50 = 98.0% |
+| Doc-Hit@1 | 82.0% |
+| Doc-Hit@3 | 94.0% |
+| Doc-Hit@5 | 98.0% |
+| Doc-Hit@10 | 98.0% |
+| 目标文献平均排名 | 1.3 |
+| Strict-Chunk-Hit | 18/50 |
+
+`Strict-Chunk-Hit` 只认可每题唯一指定的严格目标 Chunk。32道未命中严格目标Chunk的问题中，31道仍召回了正确目标论文中的其他证据，因此该指标不能解释为答案正确率36%。
+
+当前 Ragas Faithfulness 和 Answer Relevancy 的汇总均值受到 `NaN` 聚合问题影响，暂不作为对外结论。
+
+### Full与BL-1的50题文档级对比
+
+BL-1完整结果：`evaluation/results/BL1_20260717_052107/`。两组使用相同50题和真实逻辑Chunk标注。
+
+| 指标 | BL-1 Dense Top-5 | Full | 变化 |
+|---|---:|---:|---:|
+| Doc-Hit | 94% | 98% | +4个百分点 |
+| Doc-Hit@1 | 60% | 82% | +22个百分点 |
+| Doc-Hit@3 | 88% | 94% | +6个百分点 |
+| Doc-Hit@5 | 94% | 98% | +4个百分点 |
+| Doc平均排名 | 1.6 | 1.3 | 改善0.3 |
+| Strict-Chunk-Hit | 56% | 36% | -20个百分点 |
+
+Full明显改善了目标文献的靠前命中，但唯一严格目标Chunk命中低于BL-1。该现象与Full的Rerank、来源多样性和上下文预算可能选择同一正确论文中的其他证据有关。在增加多可接受Chunk标注并修复回答层Ragas之前，不能宣称Full在所有指标上全面优于BL-1。
+
+### Legacy：25题检索消融实验
+
+以下结果来自2026-07-15的旧版论文级检索实验，用于保留项目演进记录，不代表当前全链路：
+
+| 指标 | 基线 | 旧版去重优化 |
+|---|---:|---:|
+| 平均来源覆盖数 | 3.00 | 4.76 |
+| 重复来源占比 | 40.0% | 4.8% |
+| Hit@5 | 76.0% | 88.0% |
+| Recall@5 | 42.5% | 62.1% |
 
 ## 技术栈
 
-| 层级 | 技术 | 用途 |
-|---|---|---|
-| 后端 API | FastAPI、Uvicorn | 路由、文件上传、健康检查和静态资源服务 |
-| Agent | LangChain、LangGraph、ChatQwen | 工具调用、多轮对话和回答生成 |
-| 大语言模型 | 通义千问 `qwen-max` | 基于检索上下文生成科研回答 |
-| 文本嵌入 | DashScope `text-embedding-v4` | 生成 1024 维查询和文档向量 |
-| 向量数据库 | Milvus 2.5 | 存储论文分片并执行相似度检索 |
-| 数据库依赖 | MinIO、etcd | Milvus 对象存储和元数据管理 |
-| 前端 | HTML、CSS、Vanilla JavaScript | 对话界面、上传交互和历史会话展示 |
-| 流式协议 | SSE | 实时返回模型内容块 |
-| 部署 | Docker Compose | 启动 Milvus、MinIO、etcd 和 Attu |
-| 测试 | pytest | 评测指标和 SSE 解析单元测试 |
-
-前端没有使用 React、Vue 或其他 JavaScript 框架。
+| 层级 | 技术 |
+|---|---|
+| API | FastAPI、Uvicorn、SSE |
+| Agent | LangChain、LangGraph、ChatQwen |
+| LLM / Embedding | 通义千问 `qwen-max`、DashScope `text-embedding-v4` |
+| 文献解析 | xParse CLI |
+| 向量数据库 | Milvus 2.5、MinIO、etcd、Attu |
+| 评测 | Ragas、自定义ID命中指标、pytest |
+| 部署 | Docker Compose、Windows启动脚本 |
 
 ## 项目结构
 
 ```text
-biomedical_agent/
-├── app/
-│   ├── agent/                 # MCP 客户端等 Agent 扩展能力
-│   ├── api/                   # chat、file、health 路由
-│   ├── core/                  # LLM 工厂和 Milvus 连接管理
-│   ├── models/                # Pydantic 请求、响应和文档模型
-│   ├── services/              # RAG、分块、嵌入、索引和检索服务
-│   ├── tools/                 # 知识检索、时间工具
-│   ├── utils/                 # 日志配置
-│   ├── config.py              # 环境变量配置
-│   └── main.py                # FastAPI 应用入口
-├── static/                    # 原生 HTML、CSS、JavaScript 前端
-├── evaluation/                # 可重复运行的量化评测模块
-│   ├── results/               # 评测明细、汇总和报告
-│   └── evaluation_task/       # 评测方案和技术要求
-├── tests/evaluation/          # 不依赖真实模型和 Milvus 的单元测试
-├── docs/                      # 需求、技术文档和问题日志
-├── scripts/                   # PDF 转 Markdown、批量上传辅助脚本
-├── uploads/                   # 本地上传论文，不提交 Git
-├── volumes/                   # Milvus 持久化数据，不提交 Git
-├── vector-database.yml        # Milvus Docker Compose 配置
-├── run_server.py              # Windows 常用服务入口
-├── start-windows.bat          # Windows 一键启动
-├── stop-windows.bat           # Windows 停止脚本
-├── pyproject.toml             # Python 项目和开发工具配置
-└── .env.example               # 无敏感信息的配置模板
+app/
+├── agent/                      # MCP扩展入口
+├── api/                        # chat、file、health路由
+├── core/                       # LLM与Milvus连接
+├── models/                     # 请求、响应、PDF任务模型
+├── services/
+│   ├── retrieval/              # recall、rerank、diversity、context builder
+│   ├── pdf_ingestion_service.py
+│   ├── xparse_parser_service.py
+│   ├── document_splitter_service.py
+│   ├── vector_index_service.py
+│   └── rag_agent_service.py
+└── tools/                      # 知识检索、PDF入库、时间工具
+
+evaluation/                     # Legacy、50题Full、BL-1与Ragas评测
+docs/                           # 架构、设计、问题与评测文档
+scripts/                        # PDF批量辅助脚本
+static/                         # 原生Web界面
+uploads/                        # 本地原文、解析结果和任务状态（不提交Git）
+volumes/                        # Milvus持久化数据（不提交Git）
 ```
 
 ## 快速开始
 
 ### 1. 环境要求
 
-- Windows 11（当前主要开发和验证环境）；
-- Python 3.11～3.13，项目当前使用 Python 3.13；
-- Docker Desktop；
-- 阿里云 DashScope API Key；
-- 能够访问 DashScope 的网络环境。当前 Windows 启动入口使用 `127.0.0.1:7890` 代理。
+- Python 3.11～3.13
+- Docker Desktop
+- DashScope API Key
+- xParse CLI（仅PDF解析需要）
 
-### 2. 克隆项目
-
-```powershell
-git clone https://github.com/200820xmc/biomedical_agent.git
-cd biomedical_agent
-```
-
-### 3. 配置环境变量
+### 2. 安装
 
 ```powershell
 Copy-Item .env.example .env
+python -m pip install -e .
 ```
 
-打开 `.env`，至少设置：
+在 `.env` 中设置：
 
 ```dotenv
 DASHSCOPE_API_KEY=your-real-api-key
 ```
 
-不要将 `.env` 提交到 Git。当前 `.gitignore` 已排除该文件。
-
-### 4. 安装依赖
-
-使用 pip：
-
-```powershell
-python -m pip install -e .
-```
-
-如果需要运行测试和代码检查：
-
-```powershell
-python -m pip install -e ".[dev]"
-```
-
-### 5. Windows 一键启动
-
-确保 Docker Desktop 已启动，然后运行：
+### 3. 启动
 
 ```powershell
 .\start-windows.bat
 ```
 
-脚本会启动 Milvus 相关容器、启动 FastAPI，并检查健康状态。
-
-### 6. 手动启动
+或手动启动：
 
 ```powershell
 docker compose -f vector-database.yml up -d etcd minio standalone
 python run_server.py
 ```
 
-服务地址：
-
 | 地址 | 用途 |
 |---|---|
-| <http://localhost:9900> | Web 对话界面 |
-| <http://localhost:9900/docs> | Swagger API 文档 |
-| <http://localhost:9900/health> | 服务和 Milvus 健康检查 |
-| <http://localhost:8000> | Attu 管理界面（启动 `attu` 服务后可用） |
-
-如需启动 Attu：
-
-```powershell
-docker compose -f vector-database.yml up -d attu
-```
-
-### 7. 停止服务
-
-```powershell
-.\stop-windows.bat
-```
-
-## 导入论文
-
-GitHub 仓库不会提供论文原文。请准备 UTF-8 编码的 Markdown 或纯文本文件，通过 Web 页面上传，或调用接口：
-
-```python
-import requests
-
-with open("paper.md", "rb") as file:
-    response = requests.post(
-        "http://localhost:9900/api/upload",
-        files={"file": ("paper.md", file)},
-        timeout=120,
-    )
-
-print(response.json())
-```
-
-上传限制：
-
-- 支持 `.md` 和 `.txt`；
-- 单文件最大 10 MB；
-- 同名文件会覆盖 `uploads/` 中的旧文件；
-- 入库前会按 `_source` 删除该文件的旧分片，避免同一路径重复索引；
-- 上传文件和向量数据库数据默认不进入 Git。
+| <http://localhost:9900> | Web界面 |
+| <http://localhost:9900/docs> | Swagger |
+| <http://localhost:9900/health> | 健康检查 |
+| <http://localhost:8000> | Attu（单独启动后） |
 
 ## API
 
 | 方法 | 路径 | 功能 |
 |---|---|---|
-| `GET` | `/` | Web 对话页面 |
-| `GET` | `/health` | FastAPI 和 Milvus 健康检查 |
-| `POST` | `/api/chat` | 非流式 RAG 问答 |
-| `POST` | `/api/chat_stream` | SSE 流式 RAG 问答 |
-| `POST` | `/api/chat/clear` | 清空指定会话 |
-| `GET` | `/api/chat/session/{session_id}` | 查询内存中的会话历史 |
-| `POST` | `/api/upload` | 上传并索引 `.md/.txt` 文献 |
-| `POST` | `/api/index_directory` | 索引指定目录或默认 `uploads/` |
-| `GET` | `/docs` | Swagger 接口文档 |
+| `GET` | `/health` | 服务与Milvus健康检查 |
+| `POST` | `/api/chat` | 非流式Agent问答 |
+| `POST` | `/api/chat_stream` | SSE流式Agent问答 |
+| `POST` | `/api/chat/clear` | 清空会话 |
+| `GET` | `/api/chat/session/{session_id}` | 查询会话历史 |
+| `POST` | `/api/upload` | 上传PDF/MD/TXT；PDF仅登记，MD/TXT直接索引 |
+| `POST` | `/api/index_directory` | 索引目录中的MD/TXT文件 |
 
-### 非流式问答示例
-
-```python
-import requests
-
-response = requests.post(
-    "http://localhost:9900/api/chat",
-    json={
-        "Id": "demo-session",
-        "Question": "哪些研究使用深度学习识别动静脉瘘狭窄？",
-    },
-    timeout=180,
-)
-
-print(response.json()["data"]["answer"])
-```
-
-### 清空会话示例
-
-```python
-import requests
-
-requests.post(
-    "http://localhost:9900/api/chat/clear",
-    json={"sessionId": "demo-session"},
-    timeout=30,
-)
-```
-
-会话历史由进程内的 `MemorySaver` 保存，服务重启后不会持久化。
+PDF解析和入库由 Agent 工具触发，不存在独立的公开PDF入库HTTP路由。
 
 ## 运行评测
 
-评测模块的详细说明见 [evaluation/README.md](evaluation/README.md)。
-
-### 安全模式
-
-安全模式执行本地盘点、问题集校验和索引 dry-run，不进行批量 Agent 调用：
+详细说明见 [evaluation/README.md](evaluation/README.md)。正式50题全链路使用：
 
 ```powershell
-python evaluation/run_all.py --safe-only
+python evaluation/evaluate_review.py
 ```
 
-### 检索与去重评测
-
-需要 Milvus 正常运行，并会调用 Embedding API 生成查询向量：
+完整 BL-1 使用：
 
 ```powershell
-python evaluation/evaluate_retrieval.py --questions evaluation/questions.csv
-python evaluation/evaluate_deduplication.py --questions evaluation/questions.csv
+python evaluation/evaluate_bl1.py
 ```
 
-### 完整外部调用评测
+两套评测都会调用 Milvus、生成模型和 Ragas 评判模型，不应并行运行。运行前应确认外部调用成本；建议先使用 `--limit 3` 冒烟验证。当前Full和BL-1各已有一次50题结果，重复运行会产生新的模型调用费用。
 
-完整模式会批量调用 Agent 和 SSE 接口，可能产生模型费用，执行前请确认问题数量和重复运行次数：
+## 数据与安全
 
-```powershell
-python evaluation/run_all.py --allow-external-calls
-```
+- 不提交 `.env`、`uploads/`、`volumes/`。
+- 仓库不包含受版权保护的论文原文和本地Milvus数据。
+- 不将评测集自动生成的证据摘要冒充人工医学结论。
+- 不将系统输出用于临床决策。
 
-### 单元测试
+## 已知限制
 
-安装开发依赖后运行：
-
-```powershell
-python -m pytest tests/evaluation -q
-```
-
-如果当前环境没有 `pytest-cov`，可以只运行纯计算测试：
-
-```powershell
-python -m pytest -o addopts= -p no:cacheprovider tests/evaluation -q
-```
-
-当前评测模块共 90 项单元测试，覆盖文件名规范化、Hit@K、Recall@K、来源覆盖、重复占比、P50/P95 和 SSE 事件识别。
-
-## 关键配置
-
-配置由 [app/config.py](app/config.py) 通过 `.env` 读取：
-
-| 环境变量 | 示例值 | 说明 |
-|---|---|---|
-| `APP_NAME` | `AVF-Research-Assistant` | 应用名称 |
-| `DEBUG` | `True` | 是否启用调试模式 |
-| `HOST` | `0.0.0.0` | 服务监听地址 |
-| `PORT` | `9900` | FastAPI 端口 |
-| `DASHSCOPE_API_KEY` | `your-api-key-here` | DashScope 密钥，不得提交真实值 |
-| `DASHSCOPE_MODEL` | `qwen-max` | 对话模型 |
-| `DASHSCOPE_EMBEDDING_MODEL` | `text-embedding-v4` | 嵌入模型 |
-| `MILVUS_HOST` | `localhost` | Milvus 地址 |
-| `MILVUS_PORT` | `19530` | Milvus 端口 |
-| `RAG_TOP_K` | `5` | 去重后返回论文数 |
-| `CHUNK_MAX_SIZE` | `2400` | 一级分块配置；当前二次分割上限为其 2 倍 |
-| `CHUNK_OVERLAP` | `200` | 相邻分片重叠字符数 |
-
-## 常见问题
-
-### 1. `/health` 返回 503
-
-说明 FastAPI 已启动，但 Milvus 未连接。依次检查：
-
-```powershell
-docker compose -f vector-database.yml ps
-docker compose -f vector-database.yml logs standalone
-```
-
-确认 Docker Desktop 正常运行，且 `MILVUS_HOST`、`MILVUS_PORT` 与容器端口一致。
-
-### 2. 提示未设置 `DASHSCOPE_API_KEY`
-
-确认项目根目录存在 `.env`，并且其中不是占位符：
-
-```dotenv
-DASHSCOPE_API_KEY=your-real-api-key
-```
-
-不要把真实密钥粘贴到 Issue、日志或 Git 提交中。
-
-### 3. DashScope 请求失败
-
-当前 `run_server.py` 为 Windows 开发环境设置了：
-
-```text
-HTTP_PROXY=http://127.0.0.1:7890
-HTTPS_PROXY=http://127.0.0.1:7890
-```
-
-请先确认本地代理端口可用。如果你的环境不使用该代理，需要根据本机网络调整启动方式。
-
-### 4. Windows 终端出现 emoji 编码错误
-
-这是 Loguru 在部分 GBK 控制台中的显示问题，通常不影响核心服务。可以使用 UTF-8 PowerShell 或执行：
-
-```powershell
-chcp 65001
-```
-
-### 5. 新克隆项目为什么没有论文和历史向量？
-
-`uploads/` 和 `volumes/` 包含本地论文及数据库持久化数据，出于密钥、版权、体积和数据安全考虑不会提交 Git。新环境需要自行准备文献并重新上传索引。
+- 0.65阈值在低分查询上可能过滤全部结果；最新评测中 `rq007` 出现该情况。
+- 旧索引不一定具有真实 `chunk_index`，相邻Chunk扩展需要重建索引后才完全可靠。
+- 当前分块配置1600实际对应约3200字符的二次分割上限。
+- Ragas均值NaN过滤和完整Trace持久化仍需修复。
+- Query Rewrite、Multi-query、混合检索和 `source_filter` 尚未启用或实现。
 
 ## License
 
-当前仓库尚未提供独立的 `LICENSE` 文件。在明确开源许可证前，默认保留所有权利；如计划开放复用，请先补充合适的许可证文件。
+仓库当前未提供独立 `LICENSE` 文件。在明确开源许可证之前，默认保留所有权利。

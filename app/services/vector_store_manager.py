@@ -62,7 +62,7 @@ class VectorStoreManager:
 
     def add_documents(self, documents: List[Document]) -> List[str]:
         """
-        批量添加文档到向量存储（自动批量向量化）
+        批量添加文档到向量存储（自动分批，每批最多20个以适配API限制）
 
         Args:
             documents: 文档列表
@@ -75,47 +75,73 @@ class VectorStoreManager:
             import uuid
             start_time = time.time()
 
-            # 为每个文档生成唯一 id（因为 auto_id=False）
-            ids = [str(uuid.uuid4()) for _ in documents]
+            all_ids = []
+            batch_size = 20  # DashScope embedding API 限制
 
-            # LangChain Milvus 的 add_documents 会自动调用 embedding_function
-            # 并进行批量处理，性能更好
-            result_ids = self.vector_store.add_documents(documents, ids=ids)
+            for i in range(0, len(documents), batch_size):
+                batch = documents[i : i + batch_size]
+                ids = [str(uuid.uuid4()) for _ in batch]
+                self.vector_store.add_documents(batch, ids=ids)
+                all_ids.extend(ids)
+                logger.debug(f"  批次 {i // batch_size + 1}: {len(batch)} 个文档")
 
             elapsed = time.time() - start_time
             logger.info(
                 f"批量添加 {len(documents)} 个文档到 VectorStore 完成, "
                 f"耗时: {elapsed:.2f}秒, 平均: {elapsed/len(documents):.2f}秒/个"
             )
-            return result_ids
+            return all_ids
         except Exception as e:
             logger.error(f"添加文档失败: {e}")
             raise
 
-    def delete_by_source(self, file_path: str) -> int:
+    def delete_by_source(self, file_path: str, exclude_version: str = "") -> int:
         """
         删除指定文件的所有文档
 
         Args:
             file_path: 文件路径
+            exclude_version: 排除的版本ID（P1-8: 保护新写入的版本不被删除）
 
         Returns:
             int: 删除的文档数量
         """
         try:
-            # 使用 milvus_manager 获取已连接的 collection
+            if exclude_version:
+                logger.info(f"删除旧版本: {file_path} (保留 v={exclude_version})")
+            else:
+                logger.debug(f"删除文件数据: {file_path}")
+
+            # 按 _source 匹配
             collection = milvus_manager.get_collection()
-            
-            # metadata 是 JSON 字段，使用 JSON 路径查询语法
-            # _source 是文档的来源文件路径
+
+            # 获取该 source 下所有 chunk，按版本过滤
             expr = f'metadata["_source"] == "{file_path}"'
-            
-            result = collection.delete(expr)
-            deleted_count = result.delete_count if hasattr(result, "delete_count") else 0
-            
-            logger.info(f"删除文件旧数据: {file_path}, 删除数量: {deleted_count}")
-            return deleted_count
-            
+            # Milvus 表达式不支持 != ""，用 query + Python 过滤
+            old_chunks = collection.query(expr=expr, output_fields=["id", "metadata"], limit=10000)
+            ids_to_delete = []
+            for chunk in old_chunks:
+                meta = chunk.get("metadata", {})
+                ver = meta.get("_version_id", "")
+                if exclude_version and ver == exclude_version:
+                    continue  # 保护新版本
+                ids_to_delete.append(chunk["id"])
+
+            if not ids_to_delete:
+                return 0
+
+            # 分批删除
+            deleted = 0
+            batch_size = 100
+            for i in range(0, len(ids_to_delete), batch_size):
+                batch = ids_to_delete[i : i + batch_size]
+                ids_str = ", ".join(f'"{x}"' for x in batch)
+                result = collection.delete(expr=f"id in [{ids_str}]")
+                deleted += result.delete_count if hasattr(result, "delete_count") else 0
+
+            logger.info(f"删除旧版本: {file_path}, 数量: {deleted}")
+            return deleted
+
         except Exception as e:
             logger.warning(f"删除旧数据失败 (可能是首次索引): {e}")
             return 0

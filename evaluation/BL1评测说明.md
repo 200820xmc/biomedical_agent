@@ -1,0 +1,187 @@
+# BL-1 基线评测说明
+
+> 当前状态（2026-07-17）：`evaluation/results/BL1_20260717_045844/` 是3题冒烟测试；`evaluation/results/BL1_20260717_052107/` 是完整50题基线。50题文档级ID指标可以与Full比较，但Ragas均值仍受NaN影响。
+
+50题结果：Doc-Hit 94%、Doc-Hit@1 60%、Doc-Hit@3 88%、Doc-Hit@5 94%、平均排名1.6、Strict-Chunk-Hit 56%。Full对应指标为98%、82%、94%、98%、1.3和36%。因此Full改善文档级命中和排名，但没有改善唯一严格目标Chunk命中。
+
+## 1. 目的
+
+BL-1 用于和当前完整链路进行受控对比，衡量超额召回、LLM Rerank、相关性阈值、来源多样性和相邻 chunk 扩展带来的整体收益。
+
+Full或其他批量评测正在运行时，不要启动 BL-1。两套评测会同时调用 Milvus、生成模型和 Ragas 评判模型，并发运行会影响延迟、限流和结果可比性。
+
+## 2. BL-1 定义
+
+```text
+问题
+  → Milvus Dense 向量检索
+  → 删除完全重复的 chunk
+  → 保留向量排名前 5 个唯一 chunk
+  → 使用相同 ContextBuilder
+  → 使用相同 Agent 模型和系统提示词
+  → Ragas Faithfulness + Answer Relevancy
+```
+
+BL-1 不使用：
+
+- LLM Rerank
+- Rerank 相关性阈值
+- 来源多样性选择
+- 相邻 chunk 扩展
+- Query Rewrite
+- Multi Query
+
+Milvus 中存在完全相同正文的重复 UUID 行，因此代码会读取前 15 个原始向量结果，只用于删除完全重复项并取得前 5 个唯一 Dense 结果。这不属于语义超额召回或 Rerank。
+
+## 3. 输入文件
+
+```text
+evaluation/ragas_50_actual_chunk_review.csv
+```
+
+该文件包含50道题、目标文档 ID 和已映射的实际逻辑 chunk ID。
+
+禁止改用：
+
+```text
+evaluation/ragas_50_review.csv
+evaluation/ragas_50_dataset.jsonl
+```
+
+上述文件保存的是原始证据 ID，不是当前 Milvus 实际 chunk ID。
+
+## 4. 运行顺序
+
+等待完整链路50题评测彻底结束，并确认没有 `evaluate_review.py` 进程后，再运行 BL-1。
+
+先执行3题冒烟测试：
+
+```powershell
+python evaluation\evaluate_bl1.py --limit 3
+```
+
+冒烟测试应满足：
+
+```text
+question_count = 3
+Faithfulness.count = 3
+Answer Relevancy.count = 3
+ragas_metrics 中不存在 error
+review_eval_details.csv 包含3行
+每行 error 为空
+每行 tool_call_count > 0
+每行 retrieved_count > 0
+```
+
+然后运行完整50题：
+
+```powershell
+python evaluation\evaluate_bl1.py
+```
+
+调试检索但不希望产生 Ragas 评判费用时，可以使用：
+
+```powershell
+python evaluation\evaluate_bl1.py --limit 3 --skip-ragas
+```
+
+正式对比不得使用 `--skip-ragas`。
+
+## 5. 输出文件
+
+默认输出目录：
+
+```text
+evaluation/results/BL1_YYYYMMDD_HHMMSS/
+```
+
+文件：
+
+```text
+review_eval_summary.json
+review_eval_details.csv
+```
+
+BL-1 与完整链路使用完全相同的摘要指标：
+
+- Doc-Hit@1/3/5
+- Doc-Hit@10
+- Doc平均排名
+- Chunk-Hit
+- Chunk平均排名
+- Faithfulness
+- Answer Relevancy
+
+两组 `review_eval_summary.json` 的核心结构一致：
+
+```text
+question_count
+id_based_metrics.Doc-Hit
+id_based_metrics.Doc-Hit@1
+id_based_metrics.Doc-Hit@3
+id_based_metrics.Doc-Hit@5
+id_based_metrics.Doc-Hit@10
+id_based_metrics.Doc_mean_rank
+id_based_metrics.Chunk-Hit
+id_based_metrics.Chunk_mean_rank
+ragas_metrics.faithfulness
+ragas_metrics.answer_relevancy
+```
+
+## 6. 与完整链路的公平性约束
+
+两套评测保持一致：
+
+- 同一批50题
+- 同一组实际金标准 chunk ID
+- 同一 Milvus collection
+- 同一 Embedding 模型
+- 同一生成模型
+- 同一 temperature：0.7
+- 同一系统提示词
+- 同一上下文构建器和字符预算
+- 同一 Ragas 评判模型与 Embedding
+
+唯一主要变量是检索链路：
+
+| 组别 | 检索方式 |
+|---|---|
+| BL-1 | Dense 前5个唯一 chunk |
+| Full | Top-50超额召回 → 去重 → Rerank Top-20 → 阈值 → 来源多样性 → 邻接扩展 |
+
+## 7. 提升计算
+
+百分点提升：
+
+```text
+绝对提升 = Full指标 - BL-1指标
+```
+
+相对提升率：
+
+```text
+相对提升率 = (Full指标 - BL-1指标) / BL-1指标 × 100%
+```
+
+最终报告逐项展示：
+
+```text
+Doc-Hit
+Doc-Hit@1
+Doc-Hit@3
+Doc-Hit@5
+Doc-Hit@10
+Doc平均排名
+Chunk-Hit
+Chunk平均排名
+Faithfulness
+Answer Relevancy
+```
+
+平均排名越低越好，因此排名提升应计算为：
+
+```text
+排名改善 = BL-1平均排名 - Full平均排名
+```
+
+Chunk-Hit 只表示是否命中人工指定的精确目标 chunk。如果系统召回同一文献中的其他有效证据，可能支持正确回答，但不会被该指标计为命中。因此报告中应同时展示 Doc-Hit、Chunk-Hit 和回答层 Ragas 指标。

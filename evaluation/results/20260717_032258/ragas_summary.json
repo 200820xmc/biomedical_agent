@@ -1,0 +1,33 @@
+{
+  "run_id": "20260717_032258",
+  "ran_at": "2026-07-17T03:22:58.321496+08:00",
+  "question_file": "evaluation/questions_v2.csv",
+  "question_count": 5,
+  "framework": "RAGAS-style (custom LLM judge)",
+  "metrics": {
+    "faithfulness": {
+      "mean": 0.8,
+      "min": 0.7,
+      "max": 0.9,
+      "count": 5
+    },
+    "answer_relevancy": {
+      "mean": 0.88,
+      "min": 0.8,
+      "max": 0.9,
+      "count": 5
+    },
+    "context_precision": {
+      "mean": 0.64,
+      "min": 0.0,
+      "max": 0.9,
+      "count": 5
+    },
+    "context_recall": {
+      "mean": 0.7,
+      "min": 0.7,
+      "max": 0.7,
+      "count": 5
+    }
+  }
+}

@@ -93,30 +93,39 @@ async def chat_stream(request: ChatRequest):
     logger.info(f"[会话 {request.id}] 收到流式对话请求: {request.question}")
 
     async def event_generator():
+        full_answer = []
+        tool_call_count = 0
         try:
             async for chunk in rag_agent_service.query_stream(request.question, session_id=request.id):
                 chunk_type = chunk.get("type", "unknown")
                 chunk_data = chunk.get("data", None)
 
-                # 处理调试类型消息（新增）
-                if chunk_type == "debug":
-                    # 调试信息，可以选择发送或忽略
+                if chunk_type == "tool_start":
+                    # P2-3: 工具开始事件
+                    tool_call_count += 1
                     yield {
                         "event": "message",
                         "data": json.dumps({
-                            "type": "debug",
-                            "node": chunk.get("node", "unknown"),
-                            "message_type": chunk.get("message_type", "unknown")
-                        }, ensure_ascii=False)
+                            "type": "tool_start",
+                            "tool": chunk_data,
+                        }, ensure_ascii=False),
                     }
                 elif chunk_type == "tool_call":
-                    # 发送工具调用事件（可选，前端可以显示工具调用状态）
                     yield {
                         "event": "message",
                         "data": json.dumps({
                             "type": "tool_call",
                             "data": chunk_data
-                        }, ensure_ascii=False)
+                        }, ensure_ascii=False),
+                    }
+                elif chunk_type == "retrieval_complete":
+                    # P2-3: 检索完成事件（含selected_count）
+                    yield {
+                        "event": "message",
+                        "data": json.dumps({
+                            "type": "retrieval_complete",
+                            "data": chunk_data,
+                        }, ensure_ascii=False),
                     }
                 elif chunk_type == "search_results":
                     # 发送检索结果（可选，前端可以忽略）
@@ -129,6 +138,8 @@ async def chat_stream(request: ChatRequest):
                     }
                 elif chunk_type == "content":
                     # 发送内容块 - 关键：data 必须是 JSON 字符串
+                    if chunk_data:
+                        full_answer.append(str(chunk_data))
                     yield {
                         "event": "message",
                         "data": json.dumps({
@@ -137,13 +148,17 @@ async def chat_stream(request: ChatRequest):
                         }, ensure_ascii=False)
                     }
                 elif chunk_type == "complete":
-                    # 发送完成信号
+                    # P2-3: 完成事件含完整答案
+                    answer_text = "".join(full_answer)
                     yield {
                         "event": "message",
                         "data": json.dumps({
                             "type": "done",
-                            "data": chunk_data
-                        }, ensure_ascii=False)
+                            "data": {
+                                "answer": answer_text,
+                                "tool_calls": tool_call_count,
+                            }
+                        }, ensure_ascii=False),
                     }
                 elif chunk_type == "error":
                     # 发送错误信息

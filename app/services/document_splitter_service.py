@@ -65,7 +65,7 @@ class DocumentSplitterService:
             docs_after_split = self.text_splitter.split_documents(md_docs)
 
             # 第三阶段: 合并太小的分片 (< 300字符)
-            final_docs = self._merge_small_chunks(docs_after_split, min_size=300)
+            final_docs = self._merge_small_chunks(docs_after_split, min_size=config.min_chunk_size)
 
             # 添加文件路径元数据
             for doc in final_docs:

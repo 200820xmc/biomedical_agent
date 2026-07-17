@@ -167,6 +167,31 @@ class RagAgentService:
             - 如有不确定的地方，明确说明
             - 在回答末尾列出所有引用的参考文献
 
+            科研因果约束（P0-5）:
+            1. 严格区分：病因、危险因素、相关因素、病理机制和检测方法
+            2. 相关性不能直接解释为因果关系
+            3. 只有文献直接比较多个因素时，才能给出影响排序
+            4. 不得将来自不同研究、不同结局指标的数值直接放在同一排名中
+            5. 缺少直接比较证据时，必须明确说明无法给出可靠排序
+            6. 检测模型、诊断方法和技术手段不是疾病的形成原因
+            7. 对于"原因+排序"类问题，按以下结构回答：
+               一、文献支持的形成机制或危险因素
+               二、各因素的证据强度
+               三、是否存在直接比较研究
+               四、能否进行可靠排序
+               五、当前证据局限
+
+            PDF处理规则:
+            1. 只有用户明确要求解析、导入或索引PDF时，才调用PDF入库工具
+            2. 只能使用上传接口或待处理列表返回的document_id
+            3. 不得编造文件ID、文件路径或任务ID
+            4. 工具返回queued、parsing等状态时，只能说任务已提交或处理中
+            5. 只有状态为indexed时，才能说PDF已进入知识库
+            6. 用户询问进度时，调用状态查询工具
+            7. PDF加密或需要密码时，停止并要求用户通过安全接口提供
+            8. 解析失败时说明实际错误，不得假装成功
+            9. 免费API达到限制时停止，不得无限重试
+
             请根据用户的问题，灵活使用可用工具，提供高质量的科研帮助。
         """).strip()
 
@@ -235,6 +260,58 @@ class RagAgentService:
             )
             raise
 
+    async def query_with_trace(
+        self,
+        question: str,
+        session_id: str,
+    ) -> dict[str, Any]:
+        """执行一次 Agent 查询，并返回同一次调用产生的检索 artifact。
+
+        评测必须使用模型实际看到的上下文，不能在 Agent 查询前后另外执行一次检索。
+        """
+        try:
+            await self._initialize_agent()
+
+            messages = [
+                SystemMessage(content=self.system_prompt),
+                HumanMessage(content=question),
+            ]
+            result = await self.agent.ainvoke(
+                input={"messages": messages},
+                config={"configurable": {"thread_id": session_id}},
+            )
+
+            result_messages = result.get("messages", [])
+            answer = ""
+            if result_messages:
+                last_message = result_messages[-1]
+                answer = (
+                    last_message.content
+                    if hasattr(last_message, "content")
+                    else str(last_message)
+                )
+
+            retrieval_artifacts: list[dict[str, Any]] = []
+            for message in result_messages:
+                artifact = getattr(message, "artifact", None)
+                if (
+                    isinstance(artifact, dict)
+                    and isinstance(artifact.get("documents"), list)
+                ):
+                    retrieval_artifacts.append(artifact)
+
+            return {
+                "answer": answer,
+                "retrieval_artifacts": retrieval_artifacts,
+                "tool_call_count": len(retrieval_artifacts),
+            }
+        except Exception as e:
+            logger.error(
+                f"[会话 {session_id}] RAG Agent trace 查询失败: "
+                f"{format_exception_chain(e)}"
+            )
+            raise
+
     async def query_stream(
         self,
         question: str,
@@ -280,6 +357,20 @@ class RagAgentService:
             ):
                 node_name = metadata.get('langgraph_node', 'unknown') if isinstance(metadata, dict) else 'unknown'
                 message_type = type(token).__name__
+
+                # ── P0-1: 三层过滤，隔离内部模型消息 ────────────
+                # 1. 过滤内部标签（Rerank 等内部模型调用）
+                tags = metadata.get("tags", []) if isinstance(metadata, dict) else []
+                if "internal_rerank" in tags:
+                    continue
+
+                # 2. 只输出主模型节点的消息
+                if node_name != "model":
+                    continue
+
+                # 3. 跳过工具调用块
+                if getattr(token, "tool_call_chunks", None):
+                    continue
 
                 if message_type in ("AIMessage", "AIMessageChunk"):
                     content_blocks = getattr(token, 'content_blocks', None)
