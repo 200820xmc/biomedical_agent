@@ -37,6 +37,19 @@ class RetrievalItem:
 
 
 @dataclass
+class RerankResult:
+    """一次Rerank调用的结果和分数来源状态。"""
+
+    items: list[RetrievalItem] = field(default_factory=list)
+    status: str = "skipped"
+    """applied / disabled / skipped / degraded"""
+
+    applied: bool = False
+    degraded: bool = False
+    reason: str = ""
+
+
+@dataclass
 class RetrievalArtifact:
     """检索过程的完整结构化输出
 
@@ -57,16 +70,22 @@ class RetrievalArtifact:
     """Milvus 超额召回的候选数量"""
 
     reranked_count: int
-    """Rerank 后保留的数量（Rerank 未启用时与 candidate_count 相同）"""
+    """Rerank 或向量降级排序后保留的数量（默认最多10）"""
 
     selected_count: int
-    """来源多样性选择后的最终 chunk 数量"""
+    """预算控制后最终进入上下文的chunk数量"""
 
     confidence: str = "medium"
     """检索置信度：high / medium / low"""
 
     rerank_applied: bool = False
     """是否实际执行了 Rerank（降级时为 False）"""
+
+    rerank_status: str = "skipped"
+    rerank_degraded: bool = False
+    rerank_reason: str = ""
+    threshold_applied: bool = False
+    threshold_fallback: bool = False
 
     documents: list[RetrievalItem] = field(default_factory=list)
     """最终返回给模型的文档列表"""

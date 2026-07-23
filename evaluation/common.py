@@ -235,6 +235,34 @@ def compute_hit_at_k(
     return 1 if any(src in relevant_sources for src in top_k) else 0
 
 
+def compute_binary_recall_at_k(
+    retrieved_items: List[str],
+    acceptable_items: List[str],
+    k: int,
+) -> int:
+    """按本项目评测口径计算单题 Recall@K。
+
+    这里只回答“任一正确结果是否出现在前 K 条”：出现返回1，否则返回0。
+    对含多个相关项的集合覆盖率，继续使用 ``compute_recall_at_k``，不要
+    将两种定义混在同一列中。
+    """
+    return compute_hit_at_k(retrieved_items, acceptable_items, k)
+
+
+def compute_reciprocal_rank(
+    retrieved_items: List[str],
+    acceptable_items: List[str],
+) -> float:
+    """计算首个正确结果的倒数排名；未命中返回0。"""
+    acceptable = set(acceptable_items)
+    if not acceptable:
+        return 0.0
+    for rank, item in enumerate(retrieved_items, start=1):
+        if item in acceptable:
+            return 1.0 / rank
+    return 0.0
+
+
 def compute_recall_at_k(
     retrieved_sources: List[str],
     relevant_sources: List[str],

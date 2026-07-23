@@ -4,19 +4,28 @@
 """
 
 import json
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sse_starlette.sse import EventSourceResponse
 from app.models.request import ChatRequest, ClearRequest
 from app.models.response import SessionInfoResponse, ApiResponse
-from app.agent.mcp_client import format_exception_chain
-from app.services.rag_agent_service import rag_agent_service
+from app.dependencies import (
+    chat_concurrency_slot,
+    get_agent_service,
+    get_ready_rag_agent_service,
+)
+from app.services.rag_agent_service import RagAgentService
+from app.utils.logger import describe_text, format_exception_chain
 from loguru import logger
 
 router = APIRouter()
 
 
 @router.post("/chat")
-async def chat(request: ChatRequest):
+async def chat(
+    request: ChatRequest,
+    agent_service: RagAgentService = Depends(get_ready_rag_agent_service),
+    _slot: None = Depends(chat_concurrency_slot),
+):
     """快速对话接口
     {
         "code": 200,
@@ -35,13 +44,16 @@ async def chat(request: ChatRequest):
         统一格式的对话响应
     """
     try:
-        logger.info(f"[会话 {request.id}] 收到快速对话请求: {request.question}")
-        answer = await rag_agent_service.query(
+        logger.info(
+            f"收到快速对话请求: {describe_text(request.id, 'session')}, "
+            f"{describe_text(request.question, 'question')}"
+        )
+        answer = await agent_service.query(
             request.question,
             session_id=request.id
         )
 
-        logger.info(f"[会话 {request.id}] 快速对话完成")
+        logger.info(f"快速对话完成: {describe_text(request.id, 'session')}")
 
         return {
             "code": 200,
@@ -55,19 +67,18 @@ async def chat(request: ChatRequest):
 
     except Exception as e:
         logger.error(f"对话接口错误: {e}")
-        return {
-            "code": 500,
-            "message": "error",
-            "data": {
-                "success": False,
-                "answer": None,
-                "errorMessage": str(e)
-            }
-        }
+        raise HTTPException(
+            status_code=500,
+            detail="对话服务暂时不可用",
+        ) from e
 
 
 @router.post("/chat_stream")
-async def chat_stream(request: ChatRequest):
+async def chat_stream(
+    request: ChatRequest,
+    agent_service: RagAgentService = Depends(get_ready_rag_agent_service),
+    _slot: None = Depends(chat_concurrency_slot),
+):
     """流式对话接口（基于 RAG Agent，SSE）
 
     返回 SSE 格式，data 字段为 JSON：
@@ -90,13 +101,16 @@ async def chat_stream(request: ChatRequest):
     Returns:
         SSE 事件流
     """
-    logger.info(f"[会话 {request.id}] 收到流式对话请求: {request.question}")
+    logger.info(
+        f"收到流式对话请求: {describe_text(request.id, 'session')}, "
+        f"{describe_text(request.question, 'question')}"
+    )
 
     async def event_generator():
         full_answer = []
         tool_call_count = 0
         try:
-            async for chunk in rag_agent_service.query_stream(request.question, session_id=request.id):
+            async for chunk in agent_service.query_stream(request.question, session_id=request.id):
                 chunk_type = chunk.get("type", "unknown")
                 chunk_data = chunk.get("data", None)
 
@@ -170,7 +184,7 @@ async def chat_stream(request: ChatRequest):
                         }, ensure_ascii=False)
                     }
 
-            logger.info(f"[会话 {request.id}] 流式对话完成")
+            logger.info(f"流式对话完成: {describe_text(request.id, 'session')}")
 
         except Exception as e:
             logger.error(f"流式对话接口错误: {format_exception_chain(e)}")
@@ -186,7 +200,10 @@ async def chat_stream(request: ChatRequest):
 
 
 @router.post("/chat/clear", response_model=ApiResponse)
-async def clear_session(request: ClearRequest):
+async def clear_session(
+    request: ClearRequest,
+    agent_service: RagAgentService = Depends(get_agent_service),
+):
     """清空会话历史
 
     Args:
@@ -196,8 +213,10 @@ async def clear_session(request: ClearRequest):
         操作结果
     """
     try:
-        success = rag_agent_service.clear_session(request.session_id)
-        logger.info(f"清空会话: {request.session_id}, 结果: {success}")
+        success = agent_service.clear_session(request.session_id)
+        logger.info(
+            f"清空会话: {describe_text(request.session_id, 'session')}, 结果: {success}"
+        )
 
         return ApiResponse(
             status="success" if success else "error",
@@ -211,7 +230,10 @@ async def clear_session(request: ClearRequest):
 
 
 @router.get("/chat/session/{session_id}", response_model=SessionInfoResponse)
-async def get_session_info(session_id: str) -> SessionInfoResponse:
+async def get_session_info(
+    session_id: str,
+    agent_service: RagAgentService = Depends(get_agent_service),
+) -> SessionInfoResponse:
     """查询会话历史
 
     Args:
@@ -221,7 +243,7 @@ async def get_session_info(session_id: str) -> SessionInfoResponse:
         会话信息
     """
     try:
-        history = rag_agent_service.get_session_history(session_id)
+        history = agent_service.get_session_history(session_id)
 
         return SessionInfoResponse(
             session_id=session_id,

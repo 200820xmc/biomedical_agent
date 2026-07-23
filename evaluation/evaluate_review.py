@@ -1,13 +1,9 @@
-"""基于真实 Milvus chunk ID 映射的 RAG 评测
+"""Full全链路正式评测：v2多Gold、Recall/MRR与Ragas。
 
 指标：
 - ID-based Hit@K / MRR：标注 chunk 在检索结果中的命中率和排名
 - Faithfulness（RAGAS）：答案是否忠实于检索上下文
-- Response Relevancy（RAGAS）：答案与问题的相关度
-
-暂不启用（等人工审核后）：
-- Context Recall
-- 答案正确性
+- Context Recall（RAGAS）：参考答案事实是否被实际上下文覆盖
 
 用法：
     python evaluation/evaluate_review.py
@@ -16,6 +12,7 @@
 import asyncio
 import csv
 import json
+import math
 import sys
 import time
 import re
@@ -36,14 +33,19 @@ _os.environ.setdefault("DASHSCOPE_API_BASE", "https://dashscope.aliyuncs.com/com
 
 from loguru import logger
 from app.config import config
-from app.services.vector_embedding_service import vector_embedding_service
+from app.services.vector_embedding_service import get_vector_embedding_service
 from evaluation.common import write_json, write_csv
+from evaluation.formal_eval_contract import (
+    DEFAULT_REVIEW_CSV,
+    build_completion_status,
+    load_formal_review_rows,
+)
 
 CST = timezone(timedelta(hours=8))
 
 # RAGAS
 from ragas import evaluate as ragas_evaluate
-from ragas.metrics import faithfulness, answer_relevancy
+from ragas.metrics import context_recall, faithfulness
 from ragas.llms import LangchainLLMWrapper
 from langchain_openai import ChatOpenAI
 from datasets import Dataset as HFDataset
@@ -55,12 +57,8 @@ async def run_review_eval(
     limit: int = 0,
 ):
     # ── 加载评测集 ──────────────────────────────────
-    rows = []
-    with open(review_csv, "r", encoding="utf-8-sig") as f:
-        for row in csv.DictReader(f):
-            rows.append(row)
-    if limit > 0:
-        rows = rows[:limit]
+    rows, review_contract = load_formal_review_rows(review_csv, limit=limit)
+    references_reviewed = True
 
     logger.info(f"加载 {len(rows)} 道 review 题目")
 
@@ -77,13 +75,15 @@ async def run_review_eval(
     id_precision_hits = 0
     id_precision_ranks = []
     ragas_data = []
+    ragas_qids = []
 
     for i, row in enumerate(rows):
         qid = row["question_id"]
         question = row["question"]
         target_doc_id = row["document_id"].strip()
         raw_target_ids = (
-            row.get("actual_chunk_ids")
+            row.get("acceptable_chunk_ids")
+            or row.get("actual_chunk_ids")
             or row.get("context_id")
             or ""
         )
@@ -113,6 +113,10 @@ async def run_review_eval(
             retrieval_artifacts = trace.get("retrieval_artifacts", [])
             artifact = retrieval_artifacts[-1] if retrieval_artifacts else {}
             result["tool_call_count"] = trace.get("tool_call_count", 0)
+            if result["tool_call_count"] != 1:
+                raise ValueError(
+                    f"正式Full要求每题恰好一次检索，实际为{result['tool_call_count']}次"
+                )
 
             # ── 2. ID-based Hit@K ─────────────────
             # 检查标注 chunk 是否在召回候选 + 最终选择中
@@ -155,7 +159,7 @@ async def run_review_eval(
             for ch in retrieved_chunks:
                 # Document 级别匹配
                 ch_source = ch.get("source_id", "")
-                if target_doc_id and target_doc_id in ch_source:
+                if target_doc_id and target_doc_id == ch_source:
                     if not hit_doc:
                         hit_doc = True
                         result["doc_hit_rank"] = ch["rank"]
@@ -185,13 +189,14 @@ async def run_review_eval(
                 if isinstance(artifact, dict)
                 else getattr(artifact, "confidence", "?")
             )
+            result["artifact_json"] = json.dumps(artifact, ensure_ascii=False)
 
             if hit_in_selected:
                 id_precision_hits += 1
                 id_precision_ranks.append(hit_rank)
 
             # ── 3. 保存同一次 Agent 调用生成的答案 ──
-            result["answer"] = answer[:500] if answer else "（无回答）"
+            result["answer"] = answer if answer else "（无回答）"
             result["answer_chars"] = len(answer) if answer else 0
 
             # ── 4. RAGAS Faithfulness + Answer Relevancy ──
@@ -200,14 +205,23 @@ async def run_review_eval(
                 for chunk in retrieved_chunks
                 if chunk.get("content")
             ]
+            result["retrieved_contexts_json"] = json.dumps(
+                contexts_list, ensure_ascii=False
+            )
 
             if answer and contexts_list:
+                reference = (
+                    row.get("reference")
+                    or row.get("reference_candidate")
+                    or ""
+                ).strip()
                 ragas_data.append({
                     "question": question,
                     "answer": answer,
                     "contexts": contexts_list,
-                    "ground_truth": "",
+                    "ground_truth": reference if references_reviewed else "",
                 })
+                ragas_qids.append(qid)
                 result["ragas_queued"] = True
             else:
                 result["ragas_queued"] = False
@@ -225,14 +239,30 @@ async def run_review_eval(
         logger.info(f"RAGAS 计算: {len(ragas_data)} 条...")
         hf_ds = HFDataset.from_list(ragas_data)
         try:
+            metrics = [faithfulness]
+            if references_reviewed:
+                metrics.append(context_recall)
             ragas_result = ragas_evaluate(
                 dataset=hf_ds,
-                metrics=[faithfulness, answer_relevancy],
+                metrics=metrics,
                 llm=eval_llm,
-                embeddings=vector_embedding_service,
+                embeddings=get_vector_embedding_service(),
             )
-            for metric in ["faithfulness", "answer_relevancy"]:
-                values = [v for v in ragas_result[metric] if v is not None]
+            detail_by_qid = {row["question_id"]: row for row in details}
+            for metric in [item.name for item in metrics]:
+                raw_values = list(ragas_result[metric])
+                for qid, value in zip(ragas_qids, raw_values, strict=True):
+                    numeric = float(value) if value is not None else None
+                    detail_by_qid[qid][f"ragas_{metric}"] = (
+                        numeric
+                        if numeric is not None and math.isfinite(numeric)
+                        else None
+                    )
+                values = [
+                    float(value)
+                    for value in raw_values
+                    if value is not None and math.isfinite(float(value))
+                ]
                 if values:
                     ragas_scores[metric] = {
                         "mean": round(sum(values) / len(values), 4),
@@ -255,6 +285,20 @@ async def run_review_eval(
     # Chunk-level precision
     chunk_hits = sum(1 for r in details if r.get("context_hit"))
     chunk_hit_ranks = [r["context_rank"] for r in details if r.get("context_rank")]
+    chunk_recall_at_3 = sum(rank <= 3 for rank in chunk_hit_ranks) / len(rows)
+    chunk_recall_at_5 = sum(rank <= 5 for rank in chunk_hit_ranks) / len(rows)
+    chunk_mrr = sum(1.0 / rank for rank in chunk_hit_ranks) / len(rows)
+    for row in details:
+        rank = row.get("context_rank")
+        row["acceptable_chunk_recall_at_3"] = int(bool(rank and rank <= 3))
+        row["acceptable_chunk_recall_at_5"] = int(bool(rank and rank <= 5))
+        row["acceptable_chunk_reciprocal_rank"] = 1.0 / rank if rank else 0.0
+
+    completion = build_completion_status(
+        details,
+        expected_count=len(rows),
+        required_ragas_metrics=("faithfulness", "context_recall"),
+    )
 
     run_id = datetime.now(CST).strftime("%Y%m%d_%H%M%S")
     summary = {
@@ -262,20 +306,26 @@ async def run_review_eval(
         "ran_at": datetime.now(CST).isoformat(),
         "review_csv": review_csv,
         "question_count": len(rows),
+        "evaluation_variant": "Full Top-20 / Rerank Top-10 / final Top-5",
+        "review_contract": review_contract,
+        "completion": completion,
         "id_based_metrics": {
             "Doc-Hit": f"{doc_hits}/{len(rows)} = {doc_hits/len(rows):.1%}",
             **doc_precision_at_k,
             "Doc_mean_rank": round(sum(doc_hit_ranks) / len(doc_hit_ranks), 1) if doc_hit_ranks else None,
             "Chunk-Hit": f"{chunk_hits}/{len(rows)}",
+            "Acceptable-Chunk-Recall@3": round(chunk_recall_at_3, 4),
+            "Acceptable-Chunk-Recall@5": round(chunk_recall_at_5, 4),
+            "Acceptable-Chunk-MRR": round(chunk_mrr, 4),
             "Chunk_mean_rank": round(sum(chunk_hit_ranks) / len(chunk_hit_ranks), 1) if chunk_hit_ranks else None,
         },
         "ragas_metrics": ragas_scores,
         "notes": [
             "ID-based Hit@K: 标注的真实 Milvus 逻辑 chunk ID 是否在检索结果中",
+            "Recall@K: 任一可接受Chunk出现在前K条即记1，否则记0",
+            "MRR: 每题按1/首个可接受Chunk名次计分，未命中为0，再取平均",
             "Faithfulness: RAGAS LLM评判",
-            "Response Relevancy: RAGAS LLM评判",
-            "Context Recall: 待人工审核参考答案后启用",
-            "答案正确性: 待人工审核后启用",
+            "Context Recall: 仅在全部参考答案通过人工审核后启用",
         ],
     }
 
@@ -310,12 +360,29 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--csv",
-        default="evaluation/ragas_50_actual_chunk_review.csv",
+        default=str(DEFAULT_REVIEW_CSV),
     )
     parser.add_argument("--output", default="")
     parser.add_argument("--limit", type=int, default=0)
     args = parser.parse_args()
-    asyncio.run(run_review_eval(args.csv, args.output, args.limit))
+    from app.core.milvus_client import milvus_manager
+    from app.services.rag_agent_service import rag_agent_service
+    from app.services.vector_store_manager import vector_store_manager
+
+    async def _run_with_runtime():
+        try:
+            milvus_manager.connect(allow_collection_mutation=False)
+            vector_store_manager.initialize()
+            rag_agent_service.initialize()
+            return await run_review_eval(args.csv, args.output, args.limit)
+        finally:
+            await rag_agent_service.cleanup()
+            vector_store_manager.shutdown()
+            milvus_manager.close()
+
+    summary = asyncio.run(_run_with_runtime())
+    if summary["completion"]["status"] != "valid":
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

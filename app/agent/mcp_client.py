@@ -4,6 +4,8 @@ MCP 客户端管理
 """
 
 import asyncio
+
+# Experimental only: the production Agent does not import or register this module.
 from typing import Optional, Dict, Any, List, Union
 
 from langchain_core.tools import BaseTool

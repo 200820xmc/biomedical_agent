@@ -41,19 +41,10 @@ class DashScopeEmbeddings(Embeddings):
         self.model = model
         self.dimensions = dimensions
         
-        # 打印初始化信息
-        masked_key = self._mask_api_key(api_key)
         logger.info(
             f"DashScope Embeddings 初始化完成 - "
-            f"模型: {model}, 维度: {dimensions}, API Key: {masked_key}"
+            f"模型: {model}, 维度: {dimensions}, API Key: 已配置"
         )
-
-    @staticmethod
-    def _mask_api_key(api_key: str) -> str:
-        """掩码 API Key 用于日志"""
-        if len(api_key) > 8:
-            return f"{api_key[:8]}...{api_key[-4:]}"
-        return "***"
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         """
@@ -121,9 +112,22 @@ class DashScopeEmbeddings(Embeddings):
             raise RuntimeError(f"查询嵌入失败: {e}") from e
 
 
-# 全局单例
-vector_embedding_service = DashScopeEmbeddings(
-    api_key=config.dashscope_api_key,
-    model=config.dashscope_embedding_model,
-    dimensions=1024
-)
+_vector_embedding_service: DashScopeEmbeddings | None = None
+
+
+def get_vector_embedding_service() -> DashScopeEmbeddings:
+    """按需创建Embedding客户端，避免模块导入阶段初始化外部客户端。"""
+    global _vector_embedding_service
+    if _vector_embedding_service is None:
+        _vector_embedding_service = DashScopeEmbeddings(
+            api_key=config.dashscope_api_key,
+            model=config.dashscope_embedding_model,
+            dimensions=1024,
+        )
+    return _vector_embedding_service
+
+
+def reset_vector_embedding_service() -> None:
+    """释放模块持有的客户端引用，供应用关闭和隔离测试使用。"""
+    global _vector_embedding_service
+    _vector_embedding_service = None

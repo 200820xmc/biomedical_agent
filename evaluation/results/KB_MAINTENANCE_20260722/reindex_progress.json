@@ -1,0 +1,321 @@
+{
+  "started_at": "2026-07-22T22:39:31.116067+08:00",
+  "completed": {
+    "doc_0c0251": {
+      "status": "already_complete",
+      "chunk_count": 18
+    },
+    "doc_0cfc23": {
+      "status": "already_complete",
+      "chunk_count": 16
+    },
+    "doc_132164": {
+      "status": "already_complete",
+      "chunk_count": 9
+    },
+    "doc_16308d": {
+      "status": "already_complete",
+      "chunk_count": 21
+    },
+    "doc_190ed9": {
+      "status": "already_complete",
+      "chunk_count": 11
+    },
+    "doc_26b3f0": {
+      "status": "already_complete",
+      "chunk_count": 11
+    },
+    "doc_2954af": {
+      "status": "already_complete",
+      "chunk_count": 11
+    },
+    "doc_29cc5e": {
+      "status": "already_complete",
+      "chunk_count": 10
+    },
+    "doc_30e955": {
+      "status": "already_complete",
+      "chunk_count": 13
+    },
+    "doc_3501e6": {
+      "status": "already_complete",
+      "chunk_count": 22
+    },
+    "doc_3899ee": {
+      "status": "already_complete",
+      "chunk_count": 16
+    },
+    "doc_3b7890": {
+      "status": "already_complete",
+      "chunk_count": 16
+    },
+    "doc_3e2e29": {
+      "status": "already_complete",
+      "chunk_count": 16
+    },
+    "doc_4058a8": {
+      "status": "already_complete",
+      "chunk_count": 19
+    },
+    "doc_42053f": {
+      "status": "already_complete",
+      "chunk_count": 22
+    },
+    "doc_46b880": {
+      "status": "already_complete",
+      "chunk_count": 12
+    },
+    "doc_49476e": {
+      "status": "already_complete",
+      "chunk_count": 10
+    },
+    "doc_57bca3": {
+      "status": "already_complete",
+      "chunk_count": 18
+    },
+    "doc_5e5413": {
+      "status": "already_complete",
+      "chunk_count": 26
+    },
+    "doc_61c5d8": {
+      "status": "already_complete",
+      "chunk_count": 20
+    },
+    "doc_6aca02": {
+      "status": "already_complete",
+      "chunk_count": 23
+    },
+    "doc_6f1019": {
+      "status": "already_complete",
+      "chunk_count": 8
+    },
+    "doc_73baa9": {
+      "status": "already_complete",
+      "chunk_count": 19
+    },
+    "doc_75321e": {
+      "status": "already_complete",
+      "chunk_count": 26
+    },
+    "doc_799901": {
+      "status": "already_complete",
+      "chunk_count": 24
+    },
+    "doc_806271": {
+      "status": "already_complete",
+      "chunk_count": 15
+    },
+    "doc_85adcd": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 32
+    },
+    "doc_8a162a": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 9
+    },
+    "doc_8b08d9": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 23
+    },
+    "doc_8c4add": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 22
+    },
+    "doc_8ec9d8": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 28
+    },
+    "doc_91bbb0": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 11
+    },
+    "doc_91d334": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 12
+    },
+    "doc_96d0a0": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 15
+    },
+    "doc_991ca5": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 25
+    },
+    "doc_997c1e": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 27
+    },
+    "doc_9998a7": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 21
+    },
+    "doc_99bb1e": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 18
+    },
+    "doc_9c1a7b": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 14
+    },
+    "doc_9f299f": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 15
+    },
+    "doc_a221f8": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 13
+    },
+    "doc_a40c57": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 13
+    },
+    "doc_a770c3": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 50
+    },
+    "doc_ac0415": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 15
+    },
+    "doc_add0a1": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 8
+    },
+    "doc_adffac": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 20
+    },
+    "doc_ae606d": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 14
+    },
+    "doc_b2d769": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 28
+    },
+    "doc_b95bd6": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 38
+    },
+    "doc_bbd5c3": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 14
+    },
+    "doc_c14356": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 10
+    },
+    "doc_c2a542": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 19
+    },
+    "doc_d83363": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 19
+    },
+    "doc_da4abb": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 10
+    },
+    "doc_de7bde": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 4
+    },
+    "doc_e41650": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 30
+    },
+    "doc_e59627": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 19
+    },
+    "doc_e724c6": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 19
+    },
+    "doc_edda43": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 19
+    },
+    "doc_edffea": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 11
+    },
+    "doc_f2efab": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 10
+    },
+    "doc_f71775": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 33
+    },
+    "doc_f977a9": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 21
+    },
+    "doc_fa68f9": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 27
+    },
+    "doc_fc76da": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 12
+    },
+    "doc_fc8ef1": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 28
+    },
+    "doc_fdc7f9": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 19
+    },
+    "doc_fe9765": {
+      "status": "reindexed",
+      "old_row_count": 0,
+      "chunk_count": 78
+    }
+  },
+  "failed": {},
+  "updated_at": "2026-07-22T23:00:24.411948+08:00"
+}

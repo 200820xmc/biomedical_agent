@@ -1,0 +1,41 @@
+{
+  "audited_at": "2026-07-22T23:11:58.097283+08:00",
+  "collection": "biz",
+  "expected_document_count": 66,
+  "passed": true,
+  "checks": {
+    "local_document_count_matches_expected": true,
+    "milvus_source_count_matches_expected": true,
+    "local_and_milvus_sources_match": true,
+    "required_metadata_complete": true,
+    "chunk_id_formula_valid": true,
+    "content_hash_valid": true,
+    "chunk_index_integer": true,
+    "chunk_index_contiguous_per_source": true,
+    "no_duplicate_logical_chunks": true,
+    "no_duplicate_bodies_across_sources": true,
+    "no_empty_source_id": true
+  },
+  "counts": {
+    "milvus_rows": 1284,
+    "milvus_sources": 66,
+    "local_documents": 66,
+    "missing_metadata": {},
+    "invalid_chunk_ids": 0,
+    "invalid_content_hashes": 0,
+    "invalid_chunk_index_types": 0,
+    "sources_with_index_issues": 0,
+    "duplicate_logical_chunks": 0,
+    "duplicate_bodies_across_sources": 0
+  },
+  "differences": {
+    "local_only_sources": [],
+    "milvus_only_sources": [],
+    "index_issues": {},
+    "duplicate_logical_chunks": {},
+    "duplicate_bodies_across_sources": {},
+    "invalid_chunk_id_rows": [],
+    "invalid_content_hash_rows": [],
+    "invalid_chunk_index_type_rows": []
+  }
+}

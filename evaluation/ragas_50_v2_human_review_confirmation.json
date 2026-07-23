@@ -1,0 +1,11 @@
+{
+  "dataset": "evaluation/ragas_50_v2_review.csv",
+  "dataset_sha256": "5836fbc05daacb0741d234d196938d5c409d2a40f839f730989e96184d02a393",
+  "confirmed_at": "2026-07-23T02:23:00+08:00",
+  "confirmation_source": "user_message_in_codex_thread",
+  "question_supported_all": true,
+  "question_count": 50,
+  "reference_answer_reviewed_count": 50,
+  "acceptable_chunks_reviewed_count": 50,
+  "notes": "用户明确确认：50道问题均能由对应文献直接回答，question_supported全部通过。"
+}

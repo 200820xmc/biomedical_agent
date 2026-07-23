@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-07-22T22:43:03.104565+08:00",
+  "collection": "biz",
+  "schema_fields": [
+    "id",
+    "vector",
+    "content",
+    "metadata"
+  ],
+  "vector_dim": 1024,
+  "entities_before": 1953,
+  "execute": true,
+  "completed_at": "2026-07-22T22:43:04.241801+08:00",
+  "delete_count_reported": 1953,
+  "entities_after": 0
+}

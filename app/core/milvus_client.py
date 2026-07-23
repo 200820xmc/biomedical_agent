@@ -56,7 +56,7 @@ class MilvusClientManager:
         self._client: MilvusClient | None = None
         self._collection: Collection | None = None
 
-    def connect(self) -> MilvusClient:
+    def connect(self, *, allow_collection_mutation: bool = True) -> MilvusClient:
         """
         连接到 Milvus 服务器并初始化 collection
 
@@ -92,6 +92,11 @@ class MilvusClientManager:
 
             # 检查并创建 collection
             if not self._collection_exists():
+                if not allow_collection_mutation:
+                    raise RuntimeError(
+                        f"collection '{self.COLLECTION_NAME}' is missing; "
+                        "read-only connection forbids automatic creation"
+                    )
                 logger.info(f"collection '{self.COLLECTION_NAME}' 不存在，正在创建...")
                 self._create_collection()
                 logger.info(f"成功创建 collection '{self.COLLECTION_NAME}'")
@@ -111,6 +116,12 @@ class MilvusClientManager:
                 if vector_field and hasattr(vector_field, 'params') and 'dim' in vector_field.params:
                     existing_dim = vector_field.params['dim']
                     if existing_dim != self.VECTOR_DIM:
+                        if not allow_collection_mutation:
+                            raise RuntimeError(
+                                "collection vector dimension mismatch; read-only "
+                                "connection forbids dropping or rebuilding it: "
+                                f"actual={existing_dim}, expected={self.VECTOR_DIM}"
+                            )
                         logger.warning(
                             f"检测到向量维度不匹配！当前 collection 维度: {existing_dim}, 配置维度: {self.VECTOR_DIM}"
                         )

@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-07-22T23:10:29.414963+08:00",
+  "collection": "biz",
+  "documents": [
+    {
+      "remove_document_id": "doc_49476e",
+      "keep_document_id": "doc_edffea",
+      "milvus_chunk_ids": [
+        "050d8ae2-6207-4537-a5f5-f025cfbf26df",
+        "3388f0f6-ebc9-4a5c-9c4f-7ec8e0a0645e",
+        "43901fae-3710-4a28-a87c-572b917de06b",
+        "59c331db-6d96-47bc-935d-558caed5194d",
+        "6f01c912-18c8-41a6-b3e6-e892872a2f0f",
+        "d5c2eedc-ccf3-4c44-8691-e75bcdabf90c",
+        "ea988550-3c8d-407e-8f26-6ea3f418fcdb",
+        "eb35382f-126e-45da-b551-b154ce593cb3",
+        "f8c0b0ae-41be-4ebd-a0ec-ce5df1fae48c",
+        "fe3bf8eb-2b38-4ae3-be7c-8c58003e8ff5"
+      ],
+      "milvus_chunk_count": 10,
+      "kept_chunk_count": 11,
+      "files": [
+        {
+          "path": "uploads\\originals\\doc_49476e\\Stenosis_Characterization_and_Identification_for_Dialysis_Vascular_Access.pdf",
+          "size": 1786611,
+          "sha256": "49476e61519f5a422de431151d3ad57e40c18756e7668d49b492c198fb896f65"
+        },
+        {
+          "path": "uploads\\parsed\\doc_49476e\\Stenosis_Characterization_and_Identification_for_Dialysis_Vascular_Access.md",
+          "size": 21761,
+          "sha256": "de835cf323d2a6872fa2061849c8c1c7897270ea02dee75263b4e3832460d55c"
+        }
+      ],
+      "job_files": [
+        "uploads\\jobs\\job_144d66.json",
+        "uploads\\jobs\\job_8c2618.json",
+        "uploads\\jobs\\job_961880.json",
+        "uploads\\jobs\\job_9f0d66.json",
+        "uploads\\jobs\\job_af02d4.json",
+        "uploads\\jobs\\job_e9ad23.json"
+      ]
+    },
+    {
+      "remove_document_id": "doc_26b3f0",
+      "keep_document_id": "doc_2954af",
+      "milvus_chunk_ids": [
+        "1b3528fe-6338-437e-b301-79a6ea3cd8f8",
+        "2545acc6-86ab-46a6-ad25-b0828918b5c9",
+        "2b18c168-f79a-472f-bc78-e778f36e5eb8",
+        "5f7fd509-c4b9-4710-af78-8e6cdd8a9500",
+        "761f9959-cdcd-40e5-953d-b8048a0f011c",
+        "77382bcd-e2b0-4678-ae03-ca10292ed754",
+        "7ad8822e-07c2-447f-b85c-3b0d406c3362",
+        "824214be-13da-4267-b313-0f89555d6c4e",
+        "98ca563f-824c-4f80-9390-f6898ab2b8a7",
+        "b0e5274a-9330-40ab-8f7c-b7c88474872f",
+        "b4430e74-afed-4852-b37e-2fe850d0c72d"
+      ],
+      "milvus_chunk_count": 11,
+      "kept_chunk_count": 11,
+      "files": [
+        {
+          "path": "uploads\\originals\\doc_26b3f0\\2018-SKIN-COUPLED_PVDF_MICROPHONES_FOR_NONINVASIVE_VASCULAR_BLOOD_SOUND.pdf",
+          "size": 941183,
+          "sha256": "26b3f0efdcbc496efa490d7a0d631a9e64d5de9d8f375d222762555fd3e07025"
+        },
+        {
+          "path": "uploads\\parsed\\doc_26b3f0\\2018-SKIN-COUPLED_PVDF_MICROPHONES_FOR_NONINVASIVE_VASCULAR_BLOOD_SOUND.md",
+          "size": 18403,
+          "sha256": "2dee9adca1c25a1fa4af8c1647ea42a3e5f2ca3ad6201b4e425d8ac298afcec9"
+        }
+      ],
+      "job_files": [
+        "uploads\\jobs\\job_357540.json",
+        "uploads\\jobs\\job_d39af3.json",
+        "uploads\\jobs\\job_d39ccd.json",
+        "uploads\\jobs\\job_d930ef.json",
+        "uploads\\jobs\\job_ecadd1.json",
+        "uploads\\jobs\\job_f95d14.json"
+      ]
+    }
+  ],
+  "completed_at": "2026-07-22T23:10:41.087960+08:00",
+  "remaining_original_documents": 66
+}

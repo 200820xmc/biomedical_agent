@@ -1,0 +1,1321 @@
+{
+  "generated_at": "2026-07-22T22:36:50.613803+08:00",
+  "collection": "biz",
+  "milvus_document_count": 68,
+  "local_original_count_before": 115,
+  "target_count": 47,
+  "target_document_ids": [
+    "doc_1c0b81",
+    "doc_1fed10",
+    "doc_20f60a",
+    "doc_213041",
+    "doc_23272e",
+    "doc_253ac4",
+    "doc_27e09f",
+    "doc_2b4182",
+    "doc_2c3073",
+    "doc_2e1f72",
+    "doc_31ad34",
+    "doc_35eadf",
+    "doc_3c2f13",
+    "doc_409b47",
+    "doc_428455",
+    "doc_43d813",
+    "doc_447e2e",
+    "doc_46cba4",
+    "doc_4fccb1",
+    "doc_507812",
+    "doc_57853c",
+    "doc_5e0e9e",
+    "doc_61259d",
+    "doc_622761",
+    "doc_65dc4a",
+    "doc_67c2c8",
+    "doc_718a3e",
+    "doc_7c65fc",
+    "doc_846f2d",
+    "doc_8837a6",
+    "doc_93620b",
+    "doc_9f6091",
+    "doc_a19d5b",
+    "doc_aa7453",
+    "doc_af9ca5",
+    "doc_b557f3",
+    "doc_ba7a32",
+    "doc_bd3051",
+    "doc_bfbbad",
+    "doc_c2d85d",
+    "doc_c8ee90",
+    "doc_ce5db0",
+    "doc_d27955",
+    "doc_e53903",
+    "doc_f08709",
+    "doc_fadc52",
+    "doc_fee127"
+  ],
+  "documents": [
+    {
+      "document_id": "doc_1c0b81",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_1c0b81",
+      "pdfs": [
+        {
+          "name": "Partovi_-_A_review_on_deep_learning_methods_for_heart_sound_signal_analysis.pdf",
+          "size": 2672792,
+          "sha256": "1c0b813b60e36f510a8adc588f4627387e9e1d11a6dfec43fad51fdbe12fe1ee"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_1a475f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_333481.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_42c490.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_edcb27.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_f8a7ec.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_1fed10",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_1fed10",
+      "pdfs": [
+        {
+          "name": "Virieux_-_1986_-_P-SV_wave_propagation_in_heterogeneous_media_Velocity‐stress_finite‐difference_method.pdf",
+          "size": 3008244,
+          "sha256": "1fed10569da9b3597f2f3d0b12c3ab8fb439b49eef099af6b4ccf5f4129f9bbe"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_86086b.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_96befb.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_a47a25.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c5e0f4.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c61908.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_20f60a",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_20f60a",
+      "pdfs": [
+        {
+          "name": "Blake_-_2017_-_Sound_radiation_from_pipe_and_duct_systems.pdf",
+          "size": 3121256,
+          "sha256": "20f60ac8d8527186a20684d0d4e491ba966b87e33c8fb09d3405ace41c9abeae"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_41ad0f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_4e0420.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_867009.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d462ed.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_f73c2d.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_213041",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_213041",
+      "pdfs": [
+        {
+          "name": "Khalili_等_-_2021_-_Spectral_decomposition_of_the_flow_and_characterization_of_the_sound_signals_through_stenoses_with_d.pdf",
+          "size": 5217338,
+          "sha256": "2130413f852597454dcb9c1a9616eb65eb45c18b1b64eb8bce496368c764c5d6"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_0e2ae9.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_76059c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c78398.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c99d21.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_f71f16.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_23272e",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_23272e",
+      "pdfs": [
+        {
+          "name": "Panda_等_-_2019_-_Flexible,_skin_coupled_microphone_array_for_point_of_care_vascular_access_monitoring.pdf",
+          "size": 3159805,
+          "sha256": "23272e5e2b7f8c9d58b07ff52e5b830e1d05b4304199130826050608a1715caf"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_2070c3.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_34acfa.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_630710.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_7a968c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d77aa6.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_253ac4",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_253ac4",
+      "pdfs": [
+        {
+          "name": "Li_等_-_2025_-_Adjusting_blood_redistribution_to_suppress_flow_disturbances_of_hemodialysis_arteriovenous_fistula.pdf",
+          "size": 2721735,
+          "sha256": "253ac4f5c135320403164c10b1d266870c2aad3069147314a8fa46d364b7edf7"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_4fdf61.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_684cfa.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_68e43a.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_bfb2a0.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d605c9.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_27e09f",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_27e09f",
+      "pdfs": [
+        {
+          "name": "Hu_等_-_2022_-_Oxidative_stress_An_essential_factor_in_the_process_of_arteriovenous_fistula_failure.pdf",
+          "size": 3775394,
+          "sha256": "27e09f3633bf8537f3e1b1699d8803e5aa0b84b0ce10b9462cfd3f18a1c16c7d"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_20bf31.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_285153.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_6b07b6.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_75da35.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c79137.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_2b4182",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_2b4182",
+      "pdfs": [
+        {
+          "name": "Panganiban_等_-_2024_-_Computational_fluid_dynamics_(CFD)_in_arteriovenous_(AV)_graft_implantation_through_end-to-side_anas.pdf",
+          "size": 3988846,
+          "sha256": "2b4182950512466fd3a9ff42850ad19b9209337da4a54ba72a55318fdf695d5f"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_15b33c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_2c8a82.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_9cde51.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_b24243.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_e1bccf.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_2c3073",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_2c3073",
+      "pdfs": [
+        {
+          "name": "Ozden_等_-_2021_-_Simulation_of_turbulence_induced_sound_generation_inside_stenosed_femoral_artery_models_with_differe.pdf",
+          "size": 3889057,
+          "sha256": "2c3073c006ff1a1e106188823add668527af689818f7a7d675d62562e0780560"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_521461.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_7aecc4.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_7dc849.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_8bd198.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_a4d3d3.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_2e1f72",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_2e1f72",
+      "pdfs": [
+        {
+          "name": "Zhou_等_-_2023_-_Deep_learning_analysis_of_blood_flow_sounds_to_detect_arteriovenous_fistula_stenosis.pdf",
+          "size": 2926518,
+          "sha256": "2e1f7205a757f26da31b7f9062e7e1962a7385cf166805284509380c1f104e2d"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_26894f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_37988c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_cccd2e.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d56a06.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_e8ef7e.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_31ad34",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_31ad34",
+      "pdfs": [
+        {
+          "name": "Vazquez-Padron_等_-_2021_-_Intimal_hyperplasia_and_arteriovenous_fistula_failure_Looking_beyond_size_differences.pdf",
+          "size": 2841500,
+          "sha256": "31ad3414bf1a09b3347b64d5300da714eb2ab4259bace44d64792865dc683b74"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_1b7cb5.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_3e4969.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_4bf115.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_759c42.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_df6f15.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_35eadf",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_35eadf",
+      "pdfs": [
+        {
+          "name": "Poloni_等_-_2025_-_The_potential_of_sound_analysis_to_reveal_hemodynamic_conditions_of_arteriovenous_fistulae_for_hemod.pdf",
+          "size": 4356082,
+          "sha256": "35eadf4424de4ef20156759deef2426c227cc46ff503502aefc1ea28fdfa01a7"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_4069f8.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_547616.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_662afd.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_cb8aa5.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_cf5f6b.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_3c2f13",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_3c2f13",
+      "pdfs": [
+        {
+          "name": "Tommasin_等_-_2019_-_Physics_of_within-tissue_wave_propagation_generated_by_pulse_propagation_in_the_carotid_artery.pdf",
+          "size": 2550112,
+          "sha256": "3c2f136dae72f1e68e9380e26814946aef323ffae5b203e9b40a77615867fcad"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_277f22.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_39b6a3.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_787996.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_804b04.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_df2d39.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_409b47",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_409b47",
+      "pdfs": [
+        {
+          "name": "Northrup_等_-_2022_-_Differential_hemodynamics_between_arteriovenous_fistulas_with_or_without_intervention_before_success.pdf",
+          "size": 6007793,
+          "sha256": "409b47d777a19f9b69edaea32ad44f7198cd19eedd5df909fd6f065af622e3ad"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_580578.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_69f168.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_9aaf22.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d6cd6c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ee1d29.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_428455",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_428455",
+      "pdfs": [
+        {
+          "name": "Blake_-_2017_-_Essentials_of_turbulent_wall_pressure_fluctuations.pdf",
+          "size": 3890577,
+          "sha256": "42845517585a540d27af9b6dd42feede5e6d9f676285719d8a422df8e1072c72"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_8e168e.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_a2299c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ac31b5.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_cf3ae4.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d653c7.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_43d813",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_43d813",
+      "pdfs": [
+        {
+          "name": "Centracchio_等_-_2026_-_A_novel_system_to_record_pulses,_thrills,_and_bruit_sounds_generated_by_arteriovenous_fistulas.pdf",
+          "size": 5225802,
+          "sha256": "43d81301699231483356ec1a8cfa9764f597e4aa9d675d0babd6a52a1bf21749"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_113868.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_3f92b9.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_708ab7.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ac2763.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_fdc438.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_447e2e",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_447e2e",
+      "pdfs": [
+        {
+          "name": "Soliveri_等_-_2024_-_Toward_a_physiological_model_of_vascular_wall_vibrations_in_the_arteriovenous_fistula.pdf",
+          "size": 1843045,
+          "sha256": "447e2ea55b4cd92ca0bbb49cd05c0694f892d8ab3c8a10eca830a1c56d72ed3c"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_0e0ece.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_198a47.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_754882.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_7a1f76.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_b15693.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_e6f477.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_46cba4",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_46cba4",
+      "pdfs": [
+        {
+          "name": "Challis和Kitney_-_1990_-_Biomedical_signal_processing_(in_four_parts)_Part_1_time-domain_methods.pdf",
+          "size": 2256439,
+          "sha256": "46cba4239160bdb03595be50de719921186d2ae89ebbad9cafca94c455d42863"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_0ef0b3.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_10b343.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c22633.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c7c195.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_de2cd4.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_4fccb1",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_4fccb1",
+      "pdfs": [
+        {
+          "name": "Yeh_等_-_2022_-_Development_and_validation_of_machine_learning_models_to_classify_artery_stenosis_for_automated_gene.pdf",
+          "size": 2291820,
+          "sha256": "4fccb114650d30516666bcbe207a4213fe58cbe8a7f2356f2c31025f63b7bfda"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_0210cb.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_3665aa.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_b5753b.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c1a341.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c89f05.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_507812",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_507812",
+      "pdfs": [
+        {
+          "name": "Ene-Iordache和Remuzzi_-_2017_-_Blood_flow_in_idealized_vascular_access_for_hemodialysis_A_review_of_computational_studies.pdf",
+          "size": 5769580,
+          "sha256": "507812513f421721a3e5ff35620facaf92215b46bd9807dccdbe96535b534609"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_5b1182.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_7bdaaa.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_8d0d97.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_af3b8c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_f53897.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_57853c",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_57853c",
+      "pdfs": [
+        {
+          "name": "Stevens_等_-_2024_-_KDIGO_2024_clinical_practice_guideline_for_the_evaluation_and_management_of_chronic_kidney_disease.pdf",
+          "size": 6860005,
+          "sha256": "57853c42904863de1e2ea1c094a2d9f2fb6384e891e1530aa02e61ad71477d5d"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_020fa7.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_0c1b8d.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_412200.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_7af62a.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_bec5e5.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40306：page_rate超过限制\n> [retry] wait 3s then retry, max 2 retries\n"
+    },
+    {
+      "document_id": "doc_5e0e9e",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_5e0e9e",
+      "pdfs": [
+        {
+          "name": "Seo_等_-_2017_-_A_method_for_the_computational_modeling_of_the_physics_of_heart_murmurs.pdf",
+          "size": 4895482,
+          "sha256": "5e0e9e572649e3ca7611e07198da604ff24ecf1f77791c22a5dac583f79f6183"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_2833cd.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_30337c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_bc90d7.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ee7155.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ef64f1.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_61259d",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_61259d",
+      "pdfs": [
+        {
+          "name": "Du和Stephanus_-_2016_-_A_novel_classification_technique_of_arteriovenous_fistula_stenosis_evaluation_using_bilateral_PPG_an.pdf",
+          "size": 3036900,
+          "sha256": "61259dc87fb01f22bfd7bb259056c7f6a010dd2b5da3bd7277773cc97a72ef20"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_165fb4.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_3ff161.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_da5114.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_f3ac41.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_fa18f7.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_622761",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_622761",
+      "pdfs": [
+        {
+          "name": "Sühn_等_-_2020_-_Auscultation_system_for_acquisition_of_vascular_sounds_–_towards_sound-based_monitoring_of_the_carot.pdf",
+          "size": 10385111,
+          "sha256": "6227613523643a24409947c414a4a95483074547fb0cceab0ec8de663cf25dc7"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_1cd74a.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_360c6d.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_80cf47.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_958e87.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_eb047f.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40306：page_rate超过限制\n> [retry] wait 3s then retry, max 2 retries\n"
+    },
+    {
+      "document_id": "doc_65dc4a",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_65dc4a",
+      "pdfs": [
+        {
+          "name": "Ota_等_-_2020_-_Evaluation_of_hemodialysis_arteriovenous_bruit_by_deep_learning.pdf",
+          "size": 4573814,
+          "sha256": "65dc4a1600c0071d5e65a2531939df525d378b87b48825e60c5326e365d83097"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_0b1c11.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_330cdc.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_6da68f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_81cca8.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_dc9346.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_67c2c8",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_67c2c8",
+      "pdfs": [
+        {
+          "name": "Roy-Chaudhury_等_-_2007_-_Neointimal_hyperplasia_in_early_arteriovenous_fistula_failure.pdf",
+          "size": 3481179,
+          "sha256": "67c2c8dd412b0a8ec2a5d7aef32f1e05e0af06ab5d01c8f8a6d3a92c37e586b9"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_24e228.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_4cb4c5.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_59da0d.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_5ac052.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_b61092.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_718a3e",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_718a3e",
+      "pdfs": [
+        {
+          "name": "Salman和Yazicioglu_-_2019_-_Computational_analysis_for_non-invasive_detection_of_stenosis_in_peripheral_arteries.pdf",
+          "size": 3667000,
+          "sha256": "718a3e488bcd571ba6d64bc296b025f0b19e2e0baa5f4a9b92a6e959efeedbd0"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_03002c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_49fc79.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_64d140.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_a410d0.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c57133.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_7c65fc",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_7c65fc",
+      "pdfs": [
+        {
+          "name": "Zhang_等_-_2024_-_Classification_of_arteriovenous_fistula_sounds_using_a_convolutional_block_attention_module_and_long.pdf",
+          "size": 3576805,
+          "sha256": "7c65fce7b0eb1978901aa3c8c49d025497bcf245bca033dd204db0f5d901d357"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_1ec8e3.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_6a6a9d.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_6b8a4f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c0b9d9.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d53816.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_846f2d",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_846f2d",
+      "pdfs": [
+        {
+          "name": "Yazicioglu_等_-_2005_-_Acoustic_radiation_from_a_fluid-filled,_subsurface_vascular_tube_with_internal_turbulent_flow_due_to.pdf",
+          "size": 2407142,
+          "sha256": "846f2ddb895fafc35e0e068affec683ecc54814c1fc4aebf982aa2a7e0c6dd47"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_3a678c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_56748d.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_8ae1d9.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_a4fb45.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_af336d.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_8837a6",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_8837a6",
+      "pdfs": [
+        {
+          "name": "Kharboutly_等_-_2010_-_Numerical_and_experimental_study_of_blood_flow_through_a_patient-specific_arteriovenous_fistula_used.pdf",
+          "size": 2364243,
+          "sha256": "8837a682b2d41e24d40914d5761a1c9527cccff5ae3e6890e370be976c4faddc"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_1331b7.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_6cef6d.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c8420f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_de205a.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_e95d54.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_93620b",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_93620b",
+      "pdfs": [
+        {
+          "name": "Young_-_1979_-_Fluid_mechanics_of_arterial_stenoses.pdf",
+          "size": 2897875,
+          "sha256": "93620bfc66024a8253a387f9195e2aa192290e8f6005e3568bb5b2f7a2533a67"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_3fa06a.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_4b926c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_548aaa.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_6bb21c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_943975.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_9f6091",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_9f6091",
+      "pdfs": [
+        {
+          "name": "Zhu_等_-_2019_-_Computational_modeling_and_analysis_of_murmurs_generated_by_modeled_aortic_stenoses.pdf",
+          "size": 2618335,
+          "sha256": "9f6091109d32c433f9a0e13d11ddbd20366ee37a09580123aa0698540c249a4b"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_48f44e.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_4f1883.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_5da678.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_602af9.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ec812d.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_a19d5b",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_a19d5b",
+      "pdfs": [
+        {
+          "name": "Shida_等_-_2025_-_Computational_fluid_dynamics_analysis_of_pressure_and_vorticity_magnitude_fluctuations_in_intravascu.pdf",
+          "size": 5164134,
+          "sha256": "a19d5bd1734e6aea55fff8d6c30e99ab89dc4c99defcc9d46de06e17784b1103"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_3412dc.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_62cac7.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_beed71.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c100ce.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_e78cd5.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_aa7453",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_aa7453",
+      "pdfs": [
+        {
+          "name": "Chen_等_-_2021_-_Arteriovenous_fistula_flow_dysfunction_surveillance_Early_detection_using_pulse_radar_sensor_and_ma.pdf",
+          "size": 4286068,
+          "sha256": "aa74535289f62419dd634774ff5138155226684823fc1634b8fca0316febb482"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_40b5b3.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_947cff.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_b4eafa.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ceed16.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_e5270b.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_af9ca5",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_af9ca5",
+      "pdfs": [
+        {
+          "name": "Liu_等_-_2025_-_Novel_fusion_architecture_of_multi-location_blood_flow_sounds_for_arteriovenous_fistula_stenosis_dia.pdf",
+          "size": 2706393,
+          "sha256": "af9ca5929696d461ffbc6d9674707f3a0e1e8d632ccef9f99466f9e1e17fcd78"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_41d3a1.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_6635a4.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_a56320.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ceaa9f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_f4ef4c.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_b557f3",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_b557f3",
+      "pdfs": [
+        {
+          "name": "Khalili_等_-_2018_-_A_coupled_CFD-FEA_study_of_the_sound_generated_in_a_stenosed_artery_and_transmitted_through_tissue_l.pdf",
+          "size": 6327983,
+          "sha256": "b557f34408b04eb1a7652fe57422ae7cadaa68910ff615d7a3cb73f9afc094e8"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_4ffb1e.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_73e33c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_81ff31.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ac85dc.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d4a7db.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_ba7a32",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_ba7a32",
+      "pdfs": [
+        {
+          "name": "Ng_等_-_2023_-_A_review_of_the_predictive_methods_for_arteriovenous_fistula_(AVF)_failure_identification.pdf",
+          "size": 2876983,
+          "sha256": "ba7a324f94b09c29f3598fee72579b049f41b22f5fecaf302f32f47668a5d644"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_67b3b8.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_74069b.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_97c82f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d3f1b7.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_e34a68.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_bd3051",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_bd3051",
+      "pdfs": [
+        {
+          "name": "Khalili_等_-_2021_-_Spectral_decomposition_and_sound_source_localization_of_highly_disturbed_flow_through_a_severe_arter.pdf",
+          "size": 6215354,
+          "sha256": "bd30511581029d3aef08ebd43c1b8f49176d08c79da2f82e755e8fbba1445d68"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_149cbe.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_16c93c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_38ac9c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_815d9d.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_b0b4ba.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40307：今日免费额度已用完，每日限制 1000 页\n> [fallback] re-run with --api paid; or [ask human] run xparse-cli auth\n"
+    },
+    {
+      "document_id": "doc_bfbbad",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_bfbbad",
+      "pdfs": [
+        {
+          "name": "Ene-Iordache_-_Haemodynamics_and_vascular_remodeling_in_vascular_access.pdf",
+          "size": 5883319,
+          "sha256": "bfbbadf8223371599a04ca0d33d5c0a9491c9f68b45b9fa3d76afb0d448f21f2"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_099e08.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_823b5c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_8a4d24.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_b319ed.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_e21868.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40009：当前文件页数已超过请求限制（免费用户最多 100 页/文件）。您可以：设定页数范围、升级付费，或改用支持更大文件的异步 API。\n> [retry] once; if still fails, contact Textin support\n  (request_id: f9f78a922b5832b800a6c517363f00bf, contact Textin support if"
+    },
+    {
+      "document_id": "doc_c2d85d",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_c2d85d",
+      "pdfs": [
+        {
+          "name": "Iwai_等_-_2024_-_Reliable_stenosis_detection_based_on_thrill_waveform_analysis_using_non-contact_arteriovenous_fistul.pdf",
+          "size": 6267046,
+          "sha256": "c2d85df73b87877c248342db0eff4039746081591dcb16ec2b18f1662eef21cb"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_718c1f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_94a09a.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_cd2b64.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d04008.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_dcff69.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_c8ee90",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_c8ee90",
+      "pdfs": [
+        {
+          "name": "Lok_Rajan_2022_KDOQI.pdf",
+          "size": 159050,
+          "sha256": "c8ee900a54c90c5995a56a8f596d43e0b072f7fd29377844455ea837345c1170"
+        }
+      ],
+      "parsed_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\parsed\\doc_c8ee90",
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c308ec.json"
+      ],
+      "job_statuses": [
+        "failed"
+      ],
+      "latest_error": "xparse-cli 生成的 Markdown 文件为空: Lok_Rajan_2022_KDOQI.md"
+    },
+    {
+      "document_id": "doc_ce5db0",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_ce5db0",
+      "pdfs": [
+        {
+          "name": "Bozzetto_等_-_2016_-_Transitional_flow_in_the_venous_side_of_patient-specific_arteriovenous_fistulae_for_hemodialysis.pdf",
+          "size": 3270983,
+          "sha256": "ce5db008f5cfa4f59cecf7be0422ab6a2b6419695a5619b8ffdf7925eaadd3e8"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_0baaef.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_156c93.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_3acc9f.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_750c74.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_757272.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_d27955",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_d27955",
+      "pdfs": [
+        {
+          "name": "Challis和Kitney_-_1991_-_Biomedical_signal_processing_(in_four_parts)_Part_3_the_power_spectrum_and_coherence_function.pdf",
+          "size": 2164317,
+          "sha256": "d279556dbf06f961e806d4081c766fffaec157101d632700cfda3f55fe9e676d"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_15c3b9.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_47b77e.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_78e731.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_982ae4.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ab5e5e.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_e53903",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_e53903",
+      "pdfs": [
+        {
+          "name": "Browne_等_-_2015_-_Experimental_and_numerical_analysis_of_the_bulk_flow_parameters_within_an_arteriovenous_fistula.pdf",
+          "size": 3632135,
+          "sha256": "e53903a5143bb40cfc41bd286e934ba748d4b167392f2558bf9b2041391b0967"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_06796c.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_39623d.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_9da1db.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_a44e40.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_c156df.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_f08709",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_f08709",
+      "pdfs": [
+        {
+          "name": "Morab_等_-_2024_-_Computational_hemodynamics_in_human_vasculature_A_review_on_role_of_rheology,_multiphase_flow,_and.pdf",
+          "size": 4180278,
+          "sha256": "f08709bf755ae20c5bd5fd52dd948df8b7565414225783d6b97575a7b710f836"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_073006.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_52a8b2.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_ca31ea.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d581f4.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_e3ac54.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40306：page_rate超过限制\n> [retry] wait 3s then retry, max 2 retries\n"
+    },
+    {
+      "document_id": "doc_fadc52",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_fadc52",
+      "pdfs": [
+        {
+          "name": "Blake_-_2017_-_Fundamentals_of_flow-induced_vibration_and_noise.pdf",
+          "size": 4457191,
+          "sha256": "fadc5287885a940ae5a3f834e318fc5db03500aca4f36aa865d7ebb25e1b79d0"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_10fae1.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_25b555.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_754b75.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_89a49e.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d73cf5.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    },
+    {
+      "document_id": "doc_fee127",
+      "original_dir": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\originals\\doc_fee127",
+      "pdfs": [
+        {
+          "name": "Challis和Kitney_-_1991_-_Biomedical_signal_processing_(in_four_parts)_Part_2_the_frequency_transforms_and_their_inter-relati.pdf",
+          "size": 2347659,
+          "sha256": "fee127617b4330f5a094a316cd05dc8d78b81bf06eb6149ea5e3c641d8f60e09"
+        }
+      ],
+      "parsed_dir": null,
+      "job_files": [
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_02cf57.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_833f30.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_98f2bf.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_b5a211.json",
+        "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\uploads\\jobs\\job_d01fd0.json"
+      ],
+      "job_statuses": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "latest_error": "xparse-cli 退出码 3: 40003：余额不足，请充值后使用\n> [fallback] re-run with --api free; or [ask human] top up at textin.com\n"
+    }
+  ]
+}

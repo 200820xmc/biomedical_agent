@@ -1,9 +1,9 @@
 """向量索引服务模块"""
 
 import hashlib
-from datetime import datetime
+import uuid
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Dict, Optional
 
 from loguru import logger
 
@@ -32,123 +32,20 @@ def _assign_stable_chunk_metadata(
         metadata["chunk_id"] = f"{document_id}:{content_hash}"
 
 
-class IndexingResult:
-    """索引结果类"""
-
-    def __init__(self):
-        self.success = False
-        self.directory_path = ""
-        self.total_files = 0
-        self.success_count = 0
-        self.fail_count = 0
-        self.start_time: Optional[datetime] = None
-        self.end_time: Optional[datetime] = None
-        self.error_message = ""
-        self.failed_files: Dict[str, str] = {}
-
-    def increment_success_count(self):
-        """增加成功计数"""
-        self.success_count += 1
-
-    def increment_fail_count(self):
-        """增加失败计数"""
-        self.fail_count += 1
-
-    def add_failed_file(self, file_path: str, error: str):
-        """添加失败文件"""
-        self.failed_files[file_path] = error
-
-    def get_duration_ms(self) -> int:
-        """获取耗时（毫秒）"""
-        if self.start_time and self.end_time:
-            return int((self.end_time - self.start_time).total_seconds() * 1000)
-        return 0
-
-    def to_dict(self) -> Dict[str, Any]:
-        """转换为字典"""
-        return {
-            "success": self.success,
-            "directory_path": self.directory_path,
-            "total_files": self.total_files,
-            "success_count": self.success_count,
-            "fail_count": self.fail_count,
-            "duration_ms": self.get_duration_ms(),
-            "error_message": self.error_message,
-            "failed_files": self.failed_files,
-        }
-
-
 class VectorIndexService:
     """向量索引服务 - 负责读取文件、生成向量、存储到 Milvus"""
 
-    def __init__(self):
+    def __init__(
+        self,
+        store_manager=None,
+        splitter_service=None,
+        version_factory: Callable[[], str] | None = None,
+    ):
         """初始化向量索引服务"""
-        self.upload_path = "./uploads"
+        self._store_manager = store_manager or vector_store_manager
+        self._splitter = splitter_service or document_splitter_service
+        self._version_factory = version_factory or (lambda: uuid.uuid4().hex[:12])
         logger.info("向量索引服务初始化完成")
-
-    def index_directory(self, directory_path: Optional[str] = None) -> IndexingResult:
-        """
-        索引指定目录下的所有文件
-
-        Args:
-            directory_path: 目录路径（可选，默认使用配置的上传目录）
-
-        Returns:
-            IndexingResult: 索引结果
-        """
-        result = IndexingResult()
-        result.start_time = datetime.now()
-
-        try:
-            # 使用指定目录或默认上传目录
-            target_path = directory_path if directory_path else self.upload_path
-            dir_path = Path(target_path).resolve()
-
-            if not dir_path.exists() or not dir_path.is_dir():
-                raise ValueError(f"目录不存在或不是有效目录: {target_path}")
-
-            result.directory_path = str(dir_path)
-
-            # 获取所有支持的文件
-            files = list(dir_path.glob("*.txt")) + list(dir_path.glob("*.md"))
-
-            if not files:
-                logger.warning(f"目录中没有找到支持的文件: {target_path}")
-                result.total_files = 0
-                result.success = True
-                result.end_time = datetime.now()
-                return result
-
-            result.total_files = len(files)
-            logger.info(f"开始索引目录: {target_path}, 找到 {len(files)} 个文件")
-
-            # 遍历并索引每个文件
-            for file_path in files:
-                try:
-                    self.index_single_file(str(file_path))
-                    result.increment_success_count()
-                    logger.info(f"✓ 文件索引成功: {file_path.name}")
-                except Exception as e:
-                    result.increment_fail_count()
-                    result.add_failed_file(str(file_path), str(e))
-                    logger.error(f"✗ 文件索引失败: {file_path.name}, 错误: {e}")
-
-            result.success = result.fail_count == 0
-            result.end_time = datetime.now()
-
-            logger.info(
-                f"目录索引完成: 总数={result.total_files}, "
-                f"成功={result.success_count}, 失败={result.fail_count}"
-            )
-
-            return result
-
-        except Exception as e:
-            logger.error(f"索引目录失败: {e}")
-            result.success = False
-            result.error_message = str(e)
-            result.end_time = datetime.now()
-            return result
 
     def index_single_file(self, file_path: str):
         """
@@ -173,21 +70,21 @@ class VectorIndexService:
             content = path.read_text(encoding="utf-8")
             logger.info(f"读取文件: {path}, 内容长度: {len(content)} 字符")
 
-            # 2. 删除该文件的旧数据（如果存在）
+            # 2. 先分块和准备新版本，旧索引在验证完成前保持不变。
             normalized_path = path.as_posix()
-            vector_store_manager.delete_by_source(normalized_path)
-
-            # 3. 使用新的文档分割器
-            documents = document_splitter_service.split_document(content, normalized_path)
+            documents = self._splitter.split_document(content, normalized_path)
             logger.info(f"文档分割完成: {file_path} -> {len(documents)} 个分片")
 
-            # 4. 添加文档到向量存储
-            if documents:
-                _assign_stable_chunk_metadata(documents, normalized_path)
-                vector_store_manager.add_documents(documents)
-                logger.info(f"文件索引完成: {file_path}, 共 {len(documents)} 个分片")
-            else:
-                logger.warning(f"文件内容为空或无法分割: {file_path}")
+            if not documents:
+                raise RuntimeError("文件内容为空或无法分块")
+
+            chunk_count = self._write_and_switch_version(
+                documents=documents,
+                logical_source=normalized_path,
+                display_filename=path.name,
+            )
+            logger.info(f"文件索引完成: {file_path}, 共 {chunk_count} 个分片")
+            return chunk_count
 
         except Exception as e:
             logger.error(f"索引文件失败: {file_path}, 错误: {e}")
@@ -231,42 +128,87 @@ class VectorIndexService:
             # ── 1. 分块（复用现有的 DocumentSplitterService）─
             ext = Path(display_filename).suffix.lower()
             if ext in (".md", ".pdf"):
-                documents = document_splitter_service.split_markdown(content, logical_source)
+                documents = self._splitter.split_markdown(content, logical_source)
             else:
-                documents = document_splitter_service.split_text(content, logical_source)
+                documents = self._splitter.split_text(content, logical_source)
 
             if not documents:
                 logger.warning(f"内容为空或无法分块: {display_filename}")
                 return 0
 
             # ── 2. 修正元数据 + 版本标记 ────────────────────
-            import uuid
-            version_id = uuid.uuid4().hex[:8]
             base_metadata = extra_metadata or {}
             for doc in documents:
                 doc.metadata["_file_name"] = display_filename
                 doc.metadata["_source"] = logical_source
-                doc.metadata["_version_id"] = version_id
                 if parsed_source:
                     doc.metadata["_parsed_source"] = parsed_source
                 doc.metadata.update(base_metadata)
-            _assign_stable_chunk_metadata(documents, logical_source)
 
             logger.info(f"文档分块完成: {display_filename} -> {len(documents)} 个分片")
-
-            # ── 3. P1-8: 先写入新版本 → 验证成功 → 再删旧版本 ─
-            vector_store_manager.add_documents(documents)
-            logger.info(f"新版本写入完成: {display_filename}, {len(documents)} 个分片, v={version_id}")
-
-            # ── 4. 验证写入成功后再删除旧版本 ────────────────
-            vector_store_manager.delete_by_source(logical_source, exclude_version=version_id)
-
-            logger.info(f"安全索引完成: {display_filename}, v={version_id}, 共 {len(documents)} 个分片")
-            return len(documents)
+            return self._write_and_switch_version(
+                documents=documents,
+                logical_source=logical_source,
+                display_filename=display_filename,
+            )
 
         except Exception as e:
             logger.error(f"索引内容失败: {display_filename}, 错误: {e}")
             raise RuntimeError(f"索引内容失败: {e}") from e
+
+    def _write_and_switch_version(
+        self,
+        documents: list,
+        logical_source: str,
+        display_filename: str,
+    ) -> int:
+        """先写并校验新版本，再删除旧版本；失败时补偿删除新版本。"""
+        version_id = self._version_factory()
+        if not version_id:
+            raise RuntimeError("无法生成索引版本ID")
+
+        for doc in documents:
+            doc.metadata["_source"] = logical_source
+            doc.metadata["_file_name"] = display_filename
+            doc.metadata["_version_id"] = version_id
+        _assign_stable_chunk_metadata(documents, logical_source)
+        expected_chunk_ids = [str(doc.metadata["chunk_id"]) for doc in documents]
+        write_attempted = False
+
+        try:
+            write_attempted = True
+            self._store_manager.add_documents(documents)
+            if not self._store_manager.verify_source_version(
+                logical_source,
+                version_id,
+                expected_chunk_ids,
+            ):
+                raise RuntimeError("新版本写后校验失败")
+
+            self._store_manager.delete_by_source(
+                logical_source,
+                exclude_version=version_id,
+            )
+            logger.info(
+                f"安全索引完成: {display_filename}, v={version_id}, "
+                f"共 {len(documents)} 个分片"
+            )
+            return len(documents)
+        except Exception as exc:
+            rollback_error = None
+            if write_attempted:
+                try:
+                    self._store_manager.delete_source_version(
+                        logical_source,
+                        version_id,
+                    )
+                except Exception as rollback_exc:
+                    rollback_error = rollback_exc
+            if rollback_error is not None:
+                raise RuntimeError(
+                    f"索引切换失败且新版本回滚失败: {exc}; rollback={rollback_error}"
+                ) from exc
+            raise
 
 
 # 全局单例

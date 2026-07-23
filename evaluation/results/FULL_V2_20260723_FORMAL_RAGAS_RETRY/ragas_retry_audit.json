@@ -1,0 +1,20 @@
+{
+  "kind": "missing_ragas_only",
+  "created_at": "2026-07-23T03:44:49.786986+08:00",
+  "source_directory": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\results\\FULL_V2_20260723_FORMAL",
+  "source_summary_sha256": "a903dc8d57bf6af593175f99b3e0fb2329f1aad9f88b0685b4f02ff5a2468009",
+  "source_details_sha256": "77f83ae79f55eaa5b7f550cc7383f90dd7ac069dee8e27b11569a6f68ba1740c",
+  "review_csv": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_review.csv",
+  "review_csv_sha256": "5836fbc05daacb0741d234d196938d5c409d2a40f839f730989e96184d02a393",
+  "max_attempts": 3,
+  "attempts": [
+    {
+      "question_id": "rq035",
+      "metric": "faithfulness",
+      "attempt": 1,
+      "scoring_input_normalization": "latex_backslashes_removed",
+      "value": 0.9333333333333333,
+      "status": "success"
+    }
+  ]
+}

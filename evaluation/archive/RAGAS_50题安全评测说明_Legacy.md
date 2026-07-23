@@ -1,5 +1,7 @@
 # Ragas 50 题安全评测集说明
 
+> **Archive / Legacy**：第一版单Gold数据集说明，已被v2多Gold人工审核数据集替代。
+
 > 当前状态（2026-07-17）：50题Evidence-first数据、50个真实Milvus逻辑Chunk映射、Full 50题和BL-1 50题均已完成。文档级ID指标可公平比较，但两组Ragas汇总均值因未过滤NaN而不可引用。Full的Strict-Chunk-Hit低于BL-1，后续需要增加人工审核的多可接受Chunk标注。
 
 正式评测输入：
@@ -216,3 +218,16 @@ retrieved_context_ids  <- rerank 后最终上下文
 ragas_avf_50_v1_evidence_only
 ragas_avf_50_v2_reviewed_reference
 ```
+
+## 11. v2候选集当前状态（2026-07-23）
+
+已基于当前66篇索引生成 `ragas_avf_50_v2_claim_alternatives_candidate`。该版本保留唯一 `strict_chunk_id` 供历史诊断，并新增：
+
+- `reference_claims`：原子参考主张候选；
+- `acceptable_chunk_ids`：可替代支持同一主张的Chunk候选集合；
+- `reference_context_ids`：候选参考上下文ID；
+- `reference_reviewed=false` 与 `review_status=pending_human_review`。
+
+静态审计通过50题、50个当前文献、2个来源迁移。模型辅助清理从143个自动候选中删除52个假Gold，保留91个直接支持候选，25题具有多个候选Chunk。该清理不等于人工审核；正式Ragas Context Recall必须等参考主张和每个可接受Chunk全部人工复核后启用。
+
+检索侧固定比较二值 `Recall@3`、二值 `Recall@5` 和MRR。这里的Recall@K只判断“前K条是否至少出现一个正确结果”；MRR按首个正确结果的倒数排名计算。

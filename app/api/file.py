@@ -10,17 +10,18 @@ import hashlib
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
-from app.config import config
+from app.config import UPLOADS_DIR, config
+from app.dependencies import upload_concurrency_slot
 from app.services.vector_index_service import vector_index_service
 from loguru import logger
 
 router = APIRouter()
 
 # 文件上传后存储的路径
-UPLOAD_DIR = Path("./uploads")
+UPLOAD_DIR = UPLOADS_DIR
 # 原始 PDF 存储子目录
 ORIGINALS_DIR = UPLOAD_DIR / "originals"
 # 支持的文件类型
@@ -30,7 +31,10 @@ MAX_FILE_SIZE = getattr(config, "pdf_max_file_size", 10 * 1024 * 1024)
 
 
 @router.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(
+    file: UploadFile = File(...),
+    _slot: None = Depends(upload_concurrency_slot),
+):
     """
     上传文件并自动创建向量索引（MD/TXT）或登记 PDF 待入库
 
@@ -44,8 +48,12 @@ async def upload_file(file: UploadFile = File(...)):
         # ── 1. 验证文件 ────────────────────────────────────
         if not file.filename:
             raise HTTPException(status_code=400, detail="文件名不能为空")
+        if len(file.filename) > config.max_filename_length:
+            raise HTTPException(status_code=400, detail="文件名过长")
 
         safe_filename = _sanitize_filename(file.filename)
+        if not safe_filename or len(safe_filename) > config.max_filename_length:
+            raise HTTPException(status_code=400, detail="文件名无效或过长")
 
         file_extension = _get_file_extension(safe_filename)
         if file_extension not in ALLOWED_EXTENSIONS:
@@ -55,7 +63,7 @@ async def upload_file(file: UploadFile = File(...)):
             )
 
         # ── 2. 读取内容 ────────────────────────────────────
-        content = await file.read()
+        content = await file.read(MAX_FILE_SIZE + 1)
 
         if len(content) > MAX_FILE_SIZE:
             raise HTTPException(
@@ -83,10 +91,9 @@ async def _handle_md_txt_upload(filename: str, content: bytes) -> JSONResponse:
     """处理 MD/TXT 文件上传（保持现有流程：直接索引）"""
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     file_path = UPLOAD_DIR / filename
-
-    if file_path.exists():
-        logger.info(f"文件已存在，将覆盖: {file_path}")
-        file_path.unlink()
+    previous_content = file_path.read_bytes() if file_path.exists() else None
+    if previous_content is not None:
+        logger.info(f"文件已存在，索引成功后替换: {file_path}")
 
     file_path.write_bytes(content)
     logger.info(f"文件上传成功: {file_path}")
@@ -100,6 +107,11 @@ async def _handle_md_txt_upload(filename: str, content: bytes) -> JSONResponse:
     except Exception as e:
         index_success = False
         index_error = str(e)
+        # 向量旧版本已由索引服务保留；本地文件也恢复到与旧索引一致的版本。
+        if previous_content is None:
+            file_path.unlink(missing_ok=True)
+        else:
+            file_path.write_bytes(previous_content)
         logger.error(f"向量索引创建失败: {file_path}, 错误: {e}")
 
     status_code = 200 if index_success else 207  # 207 Multi-Status
@@ -162,36 +174,6 @@ async def _handle_pdf_upload(filename: str, content: bytes) -> JSONResponse:
             },
         },
     )
-
-
-@router.post("/index_directory")
-async def index_directory(directory_path: str = None):
-    """
-    索引指定目录下的所有文件
-
-    Args:
-        directory_path: 目录路径（可选，默认使用 uploads 目录）
-
-    Returns:
-        JSONResponse: 索引结果
-    """
-    try:
-        logger.info(f"开始索引目录: {directory_path or 'uploads'}")
-
-        result = vector_index_service.index_directory(directory_path)
-
-        return JSONResponse(
-            status_code=200,
-            content={
-                "code": 200,
-                "message": "success" if result.success else "partial_success",
-                "data": result.to_dict(),
-            },
-        )
-
-    except Exception as e:
-        logger.error(f"索引目录失败: {e}")
-        raise HTTPException(status_code=500, detail=f"索引目录失败: {e}")
 
 
 def _get_file_extension(filename: str) -> str:

@@ -43,14 +43,6 @@ class IngestionJob(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.now, description="最后更新时间")
 
 
-class AttachmentRef(BaseModel):
-    """会话附件引用"""
-
-    document_id: str = Field(..., description="文档 ID")
-    filename: str = Field(..., description="文件名")
-    content_type: str = Field(default="application/pdf", description="MIME 类型")
-
-
 class PDFIngestionInput(BaseModel):
     """PDF 入库工具输入参数"""
 

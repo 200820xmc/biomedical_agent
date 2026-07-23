@@ -1,0 +1,91 @@
+{
+  "run_id": "BL1_20260723_030452",
+  "ran_at": "2026-07-23T03:04:52.636305+08:00",
+  "review_csv": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_review.csv",
+  "question_count": 50,
+  "evaluation_variant": "BL-1 Dense Top-5 unique chunks",
+  "review_contract": {
+    "dataset_path": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_review.csv",
+    "dataset_sha256": "5836fbc05daacb0741d234d196938d5c409d2a40f839f730989e96184d02a393",
+    "full_question_count": 50,
+    "selected_question_count": 50,
+    "question_confirmation_manifest": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_human_review_confirmation.json",
+    "human_review_gate_passed": true
+  },
+  "completion": {
+    "status": "valid",
+    "expected_question_count": 50,
+    "detail_count": 50,
+    "error_count": 0,
+    "empty_answer_count": 0,
+    "invalid_tool_call_count": 0,
+    "empty_context_count": 0,
+    "ragas_missing_count": {
+      "faithfulness": 0,
+      "context_recall": 0
+    }
+  },
+  "id_based_metrics": {
+    "Doc-Hit": "44/50 = 88.0%",
+    "Doc-Hit@1": 0.64,
+    "Doc-Hit@3": 0.84,
+    "Doc-Hit@5": 0.88,
+    "Doc-Hit@10": 0.88,
+    "Doc_mean_rank": 1.4,
+    "Chunk-Hit": "28/50",
+    "Acceptable-Chunk-Recall@3": 0.46,
+    "Acceptable-Chunk-Recall@5": 0.56,
+    "Acceptable-Chunk-MRR": 0.3797,
+    "Chunk_mean_rank": 2.1
+  },
+  "ragas_metrics": {
+    "faithfulness": {
+      "mean": 0.8916,
+      "min": 0.2,
+      "max": 1.0,
+      "count": 50
+    },
+    "context_recall": {
+      "mean": 0.785,
+      "min": 0.0,
+      "max": 1.0,
+      "count": 50
+    }
+  },
+  "notes": [
+    "Evaluation variant: BL-1 Dense Top-5 unique chunks",
+    "ID-based Hit@K: 标注的真实 Milvus 逻辑 chunk ID 是否在检索结果中",
+    "Recall@K: 任一可接受Chunk出现在前K条即记1，否则记0",
+    "MRR: 每题按1/首个可接受Chunk名次计分，未命中为0，再取平均",
+    "Faithfulness: RAGAS LLM评判",
+    "Context Recall: 仅在全部参考答案通过人工审核后启用"
+  ],
+  "ragas_retry": {
+    "kind": "missing_ragas_only",
+    "created_at": "2026-07-23T03:43:17.402981+08:00",
+    "source_directory": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\results\\BL1_V2_20260723_FORMAL",
+    "source_summary_sha256": "e27295edbea198ddf00d8a1696b097521d443f9cf6c137f8711aed2af1ff445f",
+    "source_details_sha256": "8234e936d5a1da19f8e3423a34ec2192f72444e47348cda9a10744b05a285fb0",
+    "review_csv": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_review.csv",
+    "review_csv_sha256": "5836fbc05daacb0741d234d196938d5c409d2a40f839f730989e96184d02a393",
+    "max_attempts": 3,
+    "attempts": [
+      {
+        "question_id": "rq035",
+        "metric": "faithfulness",
+        "attempt": 1,
+        "scoring_input_normalization": "latex_backslashes_removed",
+        "value": null,
+        "status": "missing"
+      },
+      {
+        "question_id": "rq035",
+        "metric": "faithfulness",
+        "attempt": 2,
+        "scoring_input_normalization": "latex_backslashes_removed",
+        "value": 1.0,
+        "status": "success"
+      }
+    ]
+  }
+}

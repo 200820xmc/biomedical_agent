@@ -1,0 +1,47 @@
+{
+  "run_id": "BL1_20260723_023418",
+  "ran_at": "2026-07-23T02:34:18.596429+08:00",
+  "review_csv": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_review.csv",
+  "question_count": 3,
+  "evaluation_variant": "BL-1 Dense Top-5 unique chunks",
+  "review_contract": {
+    "dataset_path": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_review.csv",
+    "dataset_sha256": "5836fbc05daacb0741d234d196938d5c409d2a40f839f730989e96184d02a393",
+    "full_question_count": 50,
+    "selected_question_count": 3,
+    "question_confirmation_manifest": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_human_review_confirmation.json",
+    "human_review_gate_passed": true
+  },
+  "completion": {
+    "status": "valid",
+    "expected_question_count": 3,
+    "detail_count": 3,
+    "error_count": 0,
+    "empty_answer_count": 0,
+    "invalid_tool_call_count": 0,
+    "empty_context_count": 0,
+    "ragas_missing_count": {}
+  },
+  "id_based_metrics": {
+    "Doc-Hit": "3/3 = 100.0%",
+    "Doc-Hit@1": 0.6667,
+    "Doc-Hit@3": 1.0,
+    "Doc-Hit@5": 1.0,
+    "Doc-Hit@10": 1.0,
+    "Doc_mean_rank": 1.3,
+    "Chunk-Hit": "3/3",
+    "Acceptable-Chunk-Recall@3": 1.0,
+    "Acceptable-Chunk-Recall@5": 1.0,
+    "Acceptable-Chunk-MRR": 0.6111,
+    "Chunk_mean_rank": 2.0
+  },
+  "ragas_metrics": {},
+  "notes": [
+    "Evaluation variant: BL-1 Dense Top-5 unique chunks",
+    "ID-based Hit@K: 标注的真实 Milvus 逻辑 chunk ID 是否在检索结果中",
+    "Recall@K: 任一可接受Chunk出现在前K条即记1，否则记0",
+    "MRR: 每题按1/首个可接受Chunk名次计分，未命中为0，再取平均",
+    "Faithfulness: RAGAS LLM评判",
+    "Context Recall: 仅在全部参考答案通过人工审核后启用"
+  ]
+}

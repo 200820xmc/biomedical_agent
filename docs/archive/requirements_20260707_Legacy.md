@@ -1,5 +1,7 @@
 # 动静脉瘘狭窄分类科研助手 — 需求文档
 
+> **Archive / Legacy**：早期需求与迁移设想，其中AIOps、MCP和PubMed方案未进入当前生产链路。
+
 > **Legacy历史需求**：本文记录2026-07-07的项目迁移与早期产品设想，其中 `aiops-docs`、Plan-Execute-Replan、旧MCP目录和知识库规划不代表当前实现。当前项目入口与事实请以根目录 `README.md`、`CLAUDE.md` 和 `docs/技术文档.md` 为准。
 
 > 版本: v1.0

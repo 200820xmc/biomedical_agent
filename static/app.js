@@ -1,7 +1,7 @@
 // AVF Research Assistant 前端应用
 class AVFResearchApp {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:9900/api';
+        this.apiBaseUrl = '/api';
         this.currentMode = 'quick';
         this.sessionId = this.generateSessionId();
         this.isStreaming = false;
@@ -40,8 +40,19 @@ class AVFResearchApp {
 
     renderMarkdown(content) {
         if (!content) return '';
-        if (typeof marked === 'undefined') return this.escapeHtml(content);
-        try { return marked.parse(content); } catch (e) { return this.escapeHtml(content); }
+        if (typeof marked === 'undefined' || typeof DOMPurify === 'undefined') {
+            return this.escapeHtml(content);
+        }
+        try {
+            const rendered = marked.parse(content);
+            return DOMPurify.sanitize(rendered, {
+                USE_PROFILES: { html: true },
+                FORBID_TAGS: ['style', 'iframe', 'object', 'embed', 'form'],
+                FORBID_ATTR: ['style']
+            });
+        } catch (e) {
+            return this.escapeHtml(content);
+        }
     }
 
     highlightCodeBlocks(container) {
@@ -181,6 +192,12 @@ class AVFResearchApp {
         catch (e) { console.error('保存历史对话失败:', e); }
     }
 
+    persistCurrentChatHistory() {
+        if (this.currentChatHistory.length === 0) return;
+        this.updateCurrentChatHistory();
+        this.renderChatHistory();
+    }
+
     renderChatHistory() {
         if (!this.chatHistoryList) return;
         this.chatHistoryList.innerHTML = '';
@@ -220,7 +237,7 @@ class AVFResearchApp {
                     if (backendHistory.length > 0) {
                         this.currentChatHistory = [];
                         backendHistory.forEach(msg => {
-                            const messageType = msg.role === 'user' ? 'user' : 'bot';
+                            const messageType = msg.role === 'user' ? 'user' : 'assistant';
                             this.addMessage(messageType, msg.content, false, false);
                         });
                     } else {
@@ -310,6 +327,8 @@ class AVFResearchApp {
         if (!message) { this.showNotification('请输入消息内容', 'warning'); return; }
         if (this.isStreaming) { this.showNotification('请等待当前对话完成', 'warning'); return; }
         this.addMessage('user', message);
+        // 新对话在首条用户消息发出后立即进入“近期对话”，无需等待切换会话。
+        this.persistCurrentChatHistory();
         if (this.messageInput) this.messageInput.value = '';
         this.isStreaming = true;
         this.updateUI();
@@ -321,10 +340,8 @@ class AVFResearchApp {
         } finally {
             this.isStreaming = false;
             this.updateUI();
-            if (this.isCurrentChatFromHistory && this.currentChatHistory.length > 0) {
-                this.updateCurrentChatHistory();
-                this.renderChatHistory();
-            }
+            // 无论是新对话还是从历史列表打开的对话，都保存本轮最终状态。
+            this.persistCurrentChatHistory();
         }
     }
 
@@ -391,6 +408,15 @@ class AVFResearchApp {
                                         mc.innerHTML = self.renderMarkdown(fullResponse);
                                         self.highlightCodeBlocks(mc);
                                         self.scrollToBottom();
+                                    }
+                                } else if (sseMessage.type === 'tool_start') {
+                                    if (assistantMessageElement && !fullResponse) {
+                                        assistantMessageElement.querySelector('.message-content').textContent = '正在检索知识库...';
+                                    }
+                                } else if (sseMessage.type === 'retrieval_complete') {
+                                    if (assistantMessageElement && !fullResponse) {
+                                        var selectedCount = sseMessage.data && sseMessage.data.selected_count;
+                                        assistantMessageElement.querySelector('.message-content').textContent = selectedCount ? ('已找到 ' + selectedCount + ' 条证据，正在生成回答...') : '检索完成，正在生成回答...';
                                     }
                                 } else if (sseMessage.type === 'done') {
                                     self.handleStreamComplete(assistantMessageElement, fullResponse);
@@ -531,19 +557,19 @@ class AVFResearchApp {
     handleFileSelect(event) {
         var file = event.target.files[0];
         if (file) {
-            if (!this.validateFileType(file)) { this.showNotification('只支持上传 TXT 或 Markdown (.md) 格式的文件', 'error'); this.fileInput.value = ''; return; }
+            if (!this.validateFileType(file)) { this.showNotification('只支持上传 TXT、Markdown (.md) 或 PDF 文件', 'error'); this.fileInput.value = ''; return; }
             this.uploadFile(file);
         }
     }
 
     validateFileType(file) {
         var fileName = file.name.toLowerCase();
-        var allowedExtensions = ['.txt', '.md'];
+        var allowedExtensions = ['.txt', '.md', '.pdf'];
         return allowedExtensions.some(function(ext) { return fileName.endsWith(ext); });
     }
 
     async uploadFile(file) {
-        if (!this.validateFileType(file)) { this.showNotification('只支持上传 TXT 或 Markdown (.md) 格式的文件', 'error'); return; }
+        if (!this.validateFileType(file)) { this.showNotification('只支持上传 TXT、Markdown (.md) 或 PDF 文件', 'error'); return; }
         var maxSize = 10 * 1024 * 1024;
         if (file.size > maxSize) { this.showNotification('文件大小不能超过10MB', 'error'); return; }
         this.isStreaming = true;
@@ -555,8 +581,12 @@ class AVFResearchApp {
             var response = await fetch(this.apiBaseUrl + '/upload', { method: 'POST', body: formData });
             if (!response.ok) throw new Error('HTTP错误: ' + response.status);
             var data = await response.json();
-            if ((data.code === 200 || data.message === 'success') && data.data) {
-                this.addMessage('assistant', file.name + ' 上传到知识库成功', false, true);
+            if (data.data && data.code === 201 && data.data.status === 'uploaded') {
+                this.addMessage('assistant', file.name + ' 上传成功，当前等待解析入库。请在对话中要求我解析并加入知识库。', false, true);
+            } else if (data.data && data.data.index_success === true) {
+                this.addMessage('assistant', file.name + ' 上传并写入知识库成功', false, true);
+            } else if (data.data && data.data.upload_success === true) {
+                throw new Error(data.data.index_error || '文件已保存，但索引失败');
             } else {
                 throw new Error(data.message || '上传失败');
             }

@@ -13,6 +13,7 @@
 """
 
 import re
+from dataclasses import replace
 from typing import List, Tuple
 
 from loguru import logger
@@ -43,6 +44,11 @@ class ContextBuilder:
         candidate_count: int = 0,
         reranked_count: int = 0,
         rerank_applied: bool = False,
+        rerank_status: str = "skipped",
+        rerank_degraded: bool = False,
+        rerank_reason: str = "",
+        threshold_applied: bool = False,
+        threshold_fallback: bool = False,
         max_chars: int | None = None,
     ) -> tuple[str, RetrievalArtifact]:
         """构建格式化的上下文文本和结构化 artifact
@@ -71,12 +77,13 @@ class ContextBuilder:
         # 构建证据段落
         evidence_parts: list[str] = []
         ref_map: dict[str, str] = {}  # 引用标签 → 完整来源
-        total_chars = 0
         kept_items: list[RetrievalItem] = []
+        context = ""
 
-        for i, item in enumerate(sorted_items, 1):
+        for item in sorted_items:
+            evidence_number = len(kept_items) + 1
             citation = self._parse_citation(item.source, item.metadata)
-            ref_label = citation if citation else f"[{i}]"
+            ref_label = citation if citation else f"[{evidence_number}]"
 
             # 章节信息
             headers = []
@@ -87,43 +94,56 @@ class ContextBuilder:
             header_str = " > ".join(headers) if headers else ""
 
             # 构建证据文本
-            evidence_header = f"[证据 {i}]\n引用：{ref_label}\n"
+            evidence_header = f"[证据 {evidence_number}]\n引用：{ref_label}\n"
             if header_str:
                 evidence_header += f"章节：{header_str}\n"
 
             # ── 预算感知选择（P0-4）──────────────────────────
-            # 1. 完整内容适配
+            candidate_refs = dict(ref_map)
+            candidate_refs[ref_label] = item.source
+
+            # 1. 完整内容适配，同时计算证据间换行和参考文献。
             full_evidence = evidence_header + f"内容：\n{item.content}\n"
-            if total_chars + len(full_evidence) <= budget:
+            full_context = self._compose_context(
+                evidence_parts + [full_evidence], candidate_refs
+            )
+            if len(full_context) <= budget:
                 evidence_parts.append(full_evidence)
-                total_chars += len(full_evidence)
                 kept_items.append(item)
-                ref_map[ref_label] = item.source
+                ref_map = candidate_refs
+                context = full_context
                 continue
 
-            # 2. 截断到单证据上限
-            max_content = min(self._max_per_evidence, budget - total_chars - len(evidence_header) - 50)
+            # 2. 在完整最终上下文预算内截断正文。
+            empty_evidence = evidence_header + "内容：\n\n"
+            fixed_context = self._compose_context(
+                evidence_parts + [empty_evidence], candidate_refs
+            )
+            max_content = min(
+                self._max_per_evidence,
+                budget - len(fixed_context) - 3,
+            )
             if max_content > 200:
                 truncated = item.content[:max_content] + "..."
                 short_evidence = evidence_header + f"内容：\n{truncated}\n"
-                if total_chars + len(short_evidence) <= budget:
+                short_context = self._compose_context(
+                    evidence_parts + [short_evidence], candidate_refs
+                )
+                if len(short_context) <= budget:
                     evidence_parts.append(short_evidence)
-                    total_chars += len(short_evidence)
-                    kept_items.append(item)
-                    ref_map[ref_label] = item.source
+                    kept_items.append(replace(item, content=truncated))
+                    ref_map = candidate_refs
+                    context = short_context
                     continue
 
             # 3. 当前候选过长，跳过并继续检查后续候选
             logger.debug(f"跳过过长候选: {ref_label} ({len(item.content)} 字符)")
 
-        # 参考文献列表
-        ref_section = ""
-        if ref_map:
-            ref_lines = [f"{label}: {source}" for label, source in ref_map.items()]
-            ref_section = "\n---\n参考文献：\n" + "\n".join(ref_lines)
-
-        # 组合最终文本
-        context = "\n".join(evidence_parts) + ref_section
+        context = self._compose_context(evidence_parts, ref_map)
+        if len(context) > budget:
+            raise RuntimeError(
+                f"上下文预算控制失败: actual={len(context)}, budget={budget}"
+            )
 
         # 计算置信度
         confidence = self._compute_confidence(kept_items)
@@ -137,15 +157,32 @@ class ContextBuilder:
             selected_count=len(kept_items),
             confidence=confidence,
             rerank_applied=rerank_applied,
+            rerank_status=rerank_status,
+            rerank_degraded=rerank_degraded,
+            rerank_reason=rerank_reason,
+            threshold_applied=threshold_applied,
+            threshold_fallback=threshold_fallback,
             documents=kept_items,
         )
 
         logger.info(
             f"上下文构建完成: {len(kept_items)} 个证据, "
-            f"{total_chars} 字符, 置信度={confidence}"
+            f"{len(context)} 字符, 置信度={confidence}"
         )
 
         return context, artifact
+
+    @staticmethod
+    def _compose_context(
+        evidence_parts: list[str],
+        ref_map: dict[str, str],
+    ) -> str:
+        """组合证据与参考文献，供预算检查和最终输出共同使用。"""
+        evidence_text = "\n".join(evidence_parts)
+        if not ref_map:
+            return evidence_text
+        ref_lines = [f"{label}: {source}" for label, source in ref_map.items()]
+        return evidence_text + "\n---\n参考文献：\n" + "\n".join(ref_lines)
 
     @staticmethod
     def _parse_citation(source: str, metadata: dict | None = None) -> str:

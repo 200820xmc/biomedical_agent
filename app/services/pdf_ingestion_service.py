@@ -19,14 +19,15 @@ from typing import Optional
 
 from loguru import logger
 
-from app.config import config
+from app.config import UPLOADS_DIR, config
 from app.models.pdf_ingestion import IngestionJob, UploadedDocument
 from app.services.vector_index_service import vector_index_service
+from app.services.vector_store_manager import vector_store_manager
 from app.services.xparse_parser_service import XParseParserService, XParseExecutionError
 
 
 # ── 目录常量 ──────────────────────────────────────────────
-UPLOAD_DIR = Path("./uploads")
+UPLOAD_DIR = UPLOADS_DIR
 ORIGINALS_DIR = UPLOAD_DIR / "originals"
 PARSED_DIR = UPLOAD_DIR / "parsed"
 JOBS_DIR = UPLOAD_DIR / "jobs"
@@ -94,6 +95,20 @@ class PDFIngestionService:
             logger.info(f"document_id={document_id} 已有进行中的任务，返回现有 job")
             return existing
 
+        # ── 幂等性：以 Milvus 真实数据为准，避免历史任务状态失真后重复入库 ──
+        if not force_reindex and vector_store_manager.has_document(document_id):
+            indexed_job = self._find_latest_job(document_id, statuses={"indexed"})
+            if indexed_job is not None:
+                logger.info(
+                    f"document_id={document_id} 已存在于 Milvus，"
+                    f"返回历史 indexed 任务 {indexed_job.job_id}"
+                )
+                return indexed_job
+            raise ValueError(
+                f"document_id={document_id} 已存在于 Milvus，"
+                "但没有可用的 indexed 任务记录；如需替换请显式设置 force_reindex=true"
+            )
+
         # ── 创建任务记录 ────────────────────────────────────
         job_id = f"job_{uuid.uuid4().hex[:6]}"
         job = IngestionJob(
@@ -159,10 +174,11 @@ class PDFIngestionService:
 
             pdf_path = pdf_files[0]
 
-            # 检查是否已有 indexed 任务
-            existing_job = self._find_active_job(document_id)
-            if existing_job and existing_job.status == "indexed":
+            # 以 Milvus 真实数据为准；任务 JSON 只作为过程记录。
+            if vector_store_manager.has_document(document_id):
                 continue
+
+            existing_job = self._find_latest_job(document_id)
 
             pending.append(UploadedDocument(
                 document_id=document_id,
@@ -312,14 +328,30 @@ class PDFIngestionService:
 
     def _find_active_job(self, document_id: str) -> Optional[IngestionJob]:
         """查找 document_id 对应的活跃任务"""
+        return self._find_latest_job(
+            document_id,
+            statuses={"queued", "parsing", "parsed", "splitting", "embedding"},
+        )
+
+    def _find_latest_job(
+        self,
+        document_id: str,
+        statuses: set[str] | None = None,
+    ) -> Optional[IngestionJob]:
+        """查找文档最新任务，可按状态集合过滤。"""
         if not JOBS_DIR.exists():
             return None
+
+        latest: Optional[IngestionJob] = None
         for job_file in JOBS_DIR.glob("*.json"):
             job = self._load_job_from_file(job_file)
-            if job and job.document_id == document_id:
-                if job.status in ("queued", "parsing", "parsed", "splitting", "embedding"):
-                    return job
-        return None
+            if job is None or job.document_id != document_id:
+                continue
+            if statuses is not None and job.status not in statuses:
+                continue
+            if latest is None or job.updated_at > latest.updated_at:
+                latest = job
+        return latest
 
     def _save_job(self, job: IngestionJob) -> None:
         """将任务状态保存到 JSON 文件"""

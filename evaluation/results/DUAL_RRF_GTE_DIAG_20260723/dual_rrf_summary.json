@@ -1,0 +1,42 @@
+{
+  "run_id": "DUAL_RRF_20260723_095508",
+  "ran_at": "2026-07-23T09:55:08.152957+08:00",
+  "evaluation_variant": "Raw question + saved Agent query -> RRF@20 -> dashscope rerank",
+  "parameters": {
+    "rrf_k": 60,
+    "per_query_k": 20,
+    "fused_k": 20,
+    "rerank_k": 10,
+    "final_k": 5,
+    "rerank_query_mode": "raw",
+    "reranker_backend": "dashscope",
+    "dashscope_model": "gte-rerank-v2"
+  },
+  "review_contract": {
+    "dataset_path": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_review.csv",
+    "dataset_sha256": "5836fbc05daacb0741d234d196938d5c409d2a40f839f730989e96184d02a393",
+    "full_question_count": 50,
+    "selected_question_count": 3,
+    "question_confirmation_manifest": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\ragas_50_v2_human_review_confirmation.json",
+    "human_review_gate_passed": true
+  },
+  "agent_query_source": "D:\\study\\Code\\Code_python\\super_biz_agent_py-release-2026-05-17\\evaluation\\results\\FULL_V2_20260723_FORMAL_RAGAS_RETRY\\review_eval_details.csv",
+  "completion": {
+    "status": "invalid",
+    "expected_question_count": 3,
+    "detail_count": 3,
+    "error_count": 3,
+    "empty_result_count": 3
+  },
+  "id_based_metrics": {
+    "Doc-Hit": "0/3 = 0.0%",
+    "Doc-Hit@1": 0.0,
+    "Doc-Hit@3": 0.0,
+    "Doc-Hit@5": 0.0,
+    "Doc_mean_rank": null,
+    "Chunk-Hit": "0/3",
+    "Acceptable-Chunk-Recall@3": 0.0,
+    "Acceptable-Chunk-Recall@5": 0.0,
+    "Acceptable-Chunk-MRR": 0.0
+  }
+}

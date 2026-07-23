@@ -8,12 +8,34 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from evaluation.common import (
+    compute_binary_recall_at_k,
     compute_hit_at_k,
+    compute_reciprocal_rank,
     compute_recall_at_k,
     compute_source_coverage,
     compute_duplicate_ratio,
     compute_percentile,
 )
+
+
+class TestBinaryRecallAndMRR:
+    def test_binary_recall_only_checks_whether_any_answer_is_in_top_k(self):
+        retrieved = ["wrong-1", "wrong-2", "answer-b", "answer-a", "wrong-3"]
+        acceptable = ["answer-a", "answer-b"]
+
+        assert compute_binary_recall_at_k(retrieved, acceptable, k=3) == 1
+        assert compute_binary_recall_at_k(retrieved, ["answer-a"], k=3) == 0
+        assert compute_binary_recall_at_k(retrieved, ["answer-a"], k=5) == 1
+
+    def test_reciprocal_rank_uses_first_correct_result(self):
+        retrieved = ["wrong", "answer-b", "answer-a"]
+
+        assert compute_reciprocal_rank(
+            retrieved, ["answer-a", "answer-b"]
+        ) == 0.5
+
+    def test_reciprocal_rank_is_zero_when_not_found(self):
+        assert compute_reciprocal_rank(["wrong"], ["answer"]) == 0.0
 
 
 # ============================================================

@@ -7,7 +7,7 @@
 SERVER_URL = http://localhost:9900
 UPLOAD_API = $(SERVER_URL)/api/upload
 HEALTH_CHECK_API = $(SERVER_URL)/health
-DOCS_DIR = aiops-docs
+DOCS_DIR = docs
 MILVUS_CONTAINER = milvus-standalone
 
 # 颜色输出
@@ -181,26 +181,6 @@ status:
 	fi
 
 # ============================================================
-# 已移除的 MCP 示例服务（保留兼容目标，避免旧命令报错）
-# ============================================================
-
-# 启动 CLS MCP 服务
-start-cls:
-	@echo "$(YELLOW)CLS MCP 服务已移除，当前项目仅保留 RAG 本地工具。$(NC)"
-
-# 启动 Monitor MCP 服务
-start-monitor:
-	@echo "$(YELLOW)Monitor MCP 服务已移除，当前项目仅保留 RAG 本地工具。$(NC)"
-
-# 停止 Monitor MCP 服务
-stop-monitor:
-	@echo "$(YELLOW)Monitor MCP 服务已移除，无需停止。$(NC)"
-
-# 检查 MCP 服务状态
-status-mcp:
-	@echo "$(YELLOW)MCP 示例服务已移除；当前工具集为知识库检索和时间工具。$(NC)"
-
-# ============================================================
 # FastAPI 服务管理
 # ============================================================
 
@@ -242,10 +222,6 @@ stop:
 	@echo "$(GREEN)═══════════════════════════════════════════════════════$(NC)"
 	@echo "$(GREEN)✅ FastAPI 服务已停止！$(NC)"
 	@echo "$(GREEN)═══════════════════════════════════════════════════════$(NC)"
-
-# 停止 CLS MCP 服务
-stop-cls:
-	@echo "$(YELLOW)CLS MCP 服务已移除，无需停止。$(NC)"
 
 # 停止 FastAPI 服务
 stop-api:
@@ -494,8 +470,6 @@ clean:  ## 清理临时文件
 	find . -type f -name "*.pyc" -delete 2>/dev/null || true
 	rm -rf htmlcov/ .coverage
 	rm -f server.pid server.log
-	rm -f mcp_cls.pid mcp_cls.log
-	rm -f mcp_monitor.pid mcp_monitor.log
 	rm -rf uploads/*.tmp 2>/dev/null || true
 	@echo "$(GREEN)✅ 清理完成$(NC)"
 

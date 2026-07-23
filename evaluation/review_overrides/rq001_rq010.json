@@ -1,0 +1,84 @@
+{
+  "review_type": "model_assisted_candidate_cleanup",
+  "reviewed_at": "2026-07-23",
+  "questions": {
+    "rq001": {
+      "reference": "A smaller angle AVF had smaller disturbed flow areas with lower RRT peak values, either on the venous or the arterial limb.",
+      "acceptable_chunk_ids": [
+        "doc_0c0251:82bd6331891d1f77",
+        "doc_0c0251:80caf588e897174b"
+      ],
+      "review_notes": "仅保留直接报告吻合口角度与扰动流面积、RRT峰值关系的证据。"
+    },
+    "rq002": {
+      "reference": "Vessel stenosis changes were found to be associated with changes in acoustic amplitude and/or spec-tral energy distribution.",
+      "acceptable_chunk_ids": [
+        "doc_0cfc23:c0600baa5bc56a30",
+        "doc_0cfc23:f3df31fd0b5cc5c5"
+      ],
+      "review_notes": "两段均直接支持狭窄变化与声振幅或频谱能量分布变化的关联。"
+    },
+    "rq003": {
+      "reference": "Under the modeling condlitions, the effect of these lung resonant modes outweighs that of bones on acoustic waves at these frequencies.",
+      "acceptable_chunk_ids": [
+        "doc_132164:1115fa7ed1d88be7"
+      ],
+      "review_notes": "仅摘要直接比较肺共振与骨骼对低频声波的相对影响。"
+    },
+    "rq004": {
+      "reference": "The proposed model is a combination of two new input features based on short-time Fourier transform (STFT) and sample entropy, as well as two associated classification models (ResNet50 and ANN).",
+      "acceptable_chunk_ids": [
+        "doc_16308d:3f0430b17f8b5f6f",
+        "doc_16308d:8f3c95d502ff165e",
+        "doc_16308d:74eb2d699e1651c5"
+      ],
+      "review_notes": "保留同时说明STFT、样本熵及ResNet50、ANN组合关系的证据。"
+    },
+    "rq005": {
+      "reference": "从血管声音的小波变换系数中提取所选尺度或频带的能量特征，经归一化、对数变换及特征选择后输入支持向量机，将样本分为狭窄与非狭窄。",
+      "acceptable_chunk_ids": [
+        "doc_190ed9:aa740f2b73e8bf5e",
+        "doc_190ed9:f2f5d03ae55c48ce",
+        "doc_190ed9:a560a8af6a0b30c4"
+      ],
+      "review_notes": "补全小波能量特征的预处理、选择及SVM分类流程。"
+    },
+    "rq006": {
+      "reference": "将适合皮肤表面记录PAG的多通道PVDF传感器用于快速、无创采集血流声音；通过优化传感器尺寸和背衬材料提高灵敏度并获得较中性的频响，并在可控狭窄血流模型上与传统听诊器比较。",
+      "acceptable_chunk_ids": [
+        "doc_2954af:a85c01440dd73d05"
+      ],
+      "review_notes": "仅保留迁移后来源中完整概述传感器设计、用途和验证方式的摘要证据。"
+    },
+    "rq007": {
+      "reference": "A theo-retical model is proposed which: (a) quantitatively relates the in vivo and in vitro data, and (b) allows estimation of the clinically important parameters of arterial diameter,flow velocity, local turbulence intensity, and wall pressure fluctuations.",
+      "acceptable_chunk_ids": [
+        "doc_29cc5e:940017131a3bdd2c"
+      ],
+      "review_notes": "该摘要直接列出可估计的动脉直径、流速、局部湍流强度和壁面压力波动。"
+    },
+    "rq008": {
+      "reference": "采用非线性子带频域线性预测，依据慢性透析患者血流的生理特性自适应预测信号包络，生成杂音增强录音和功率包络；这些滤波输出可进一步分析血管生理及再狭窄风险。",
+      "acceptable_chunk_ids": [
+        "doc_30e955:4f1d173d87d41180"
+      ],
+      "review_notes": "仅摘要同时覆盖信号增强方法、输出形式及再狭窄风险分析用途。"
+    },
+    "rq009": {
+      "reference": "该框架由单向耦合血流动力学—声学方法和基于波分解的后处理组成：IBM不可压流求解器计算狭窄动脉血流，LPCE描述血液中的声产生与传播，线弹性波方程描述组织传播，并将声信号分解为纵向压缩波与横向剪切波。",
+      "acceptable_chunk_ids": [
+        "doc_3501e6:7c7de8ab1230f941"
+      ],
+      "review_notes": "仅保留一段中完整覆盖血流、流体声学、组织传播和波分解模型的证据。"
+    },
+    "rq010": {
+      "reference": "研究使用DenseNet201、EfficientNetB5和ResNet50分析由AVF听诊音转换的mel频谱图；优化轮次下三者AUROC分别为0.70、0.98和0.99，而Grad-CAM显示只有ResNet50聚焦于与AVF狭窄相关的频谱区域，因此ResNet50表现最佳且解释性最可信。",
+      "acceptable_chunk_ids": [
+        "doc_3899ee:faf1d216017d167d",
+        "doc_3899ee:e4dfa9fe0a9ebbd6",
+        "doc_3899ee:207581b54030cd14"
+      ],
+      "review_notes": "补全三种网络的AUROC与Grad-CAM结论，删除只描述网络结构而不含主要结果的候选。"
+    }
+  }
+}

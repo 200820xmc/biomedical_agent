@@ -1,4 +1,4 @@
-"""检索子包 — 超额召回、Rerank、来源多样性和上下文构建
+"""检索子包 — Top-20召回、单次Rerank、索引邻居扩展和上下文构建
 
 对外入口：
     from app.services.retrieval import retrieval_service

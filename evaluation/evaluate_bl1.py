@@ -7,7 +7,7 @@ BL-1 的项目内定义：
       → 按向量距离排序并删除完全重复 chunk
       → 保留前 5 个唯一 chunk
       → 使用与全链路相同的 ContextBuilder、Agent 模型和系统提示词
-      → Ragas Faithfulness + Answer Relevancy
+      → Ragas Faithfulness + Context Recall
 
 明确关闭：
 
@@ -38,6 +38,7 @@ import argparse
 import asyncio
 import csv
 import json
+import math
 import os
 import statistics
 import sys
@@ -76,18 +77,22 @@ from langchain_qwq import ChatQwen
 from loguru import logger
 from ragas import evaluate as ragas_evaluate
 from ragas.llms import LangchainLLMWrapper
-from ragas.metrics import answer_relevancy, faithfulness
+from ragas.metrics import context_recall, faithfulness
 
 from app.config import config
 from app.services.rag_agent_service import rag_agent_service
 from app.services.retrieval.context_builder import ContextBuilder
 from app.services.retrieval.recall_service import RecallService
-from app.services.vector_embedding_service import vector_embedding_service
+from app.services.vector_embedding_service import get_vector_embedding_service
 from evaluation.common import write_csv, write_json
+from evaluation.formal_eval_contract import (
+    DEFAULT_REVIEW_CSV,
+    build_completion_status,
+    load_formal_review_rows,
+)
 
 
 CST = timezone(timedelta(hours=8))
-DEFAULT_REVIEW_CSV = ROOT / "evaluation" / "ragas_50_actual_chunk_review.csv"
 BL1_FINAL_K = 5
 BL1_RAW_K = 15
 
@@ -98,13 +103,15 @@ _context_builder = ContextBuilder()
 
 def _dedupe_preserve_dense_order(items: list) -> list:
     """只去除完全相同的逻辑 chunk ID，保持原始 Dense 排名。"""
-    seen: set[str] = set()
+    seen_ids: set[str] = set()
+    seen_contents: set[str] = set()
     unique = []
     for item in items:
-        key = item.chunk_id or item.content
-        if key in seen:
+        if item.chunk_id in seen_ids or item.content in seen_contents:
             continue
-        seen.add(key)
+        if item.chunk_id:
+            seen_ids.add(item.chunk_id)
+        seen_contents.add(item.content)
         unique.append(item)
     return unique
 
@@ -153,17 +160,12 @@ def _artifact_to_dict(
 @tool("retrieve_knowledge", response_format="content_and_artifact")
 async def retrieve_knowledge_bl1(
     query: str,
-    top_k: int | None = None,
-    search_mode: str = "auto",
-    source_filter: list[str] | None = None,
 ) -> tuple[str, dict[str, Any]]:
     """使用 BL-1 Dense Top-5 基线从知识库检索论文证据。
 
     该工具仅执行向量相似度检索和完全重复 chunk 删除，不执行 Rerank、
     阈值过滤、来源多样性选择或相邻 chunk 扩展。
     """
-    del search_mode, source_filter
-    final_k = min(top_k or BL1_FINAL_K, BL1_FINAL_K)
     start = time.perf_counter()
 
     raw_items = _recall_service.recall(
@@ -171,7 +173,7 @@ async def retrieve_knowledge_bl1(
         candidate_count=BL1_RAW_K,
     )
     unique_items = _dedupe_preserve_dense_order(raw_items)
-    selected = unique_items[:final_k]
+    selected = unique_items[:BL1_FINAL_K]
 
     context, built_artifact = _context_builder.build(
         items=selected,
@@ -250,14 +252,8 @@ async def run_bl1_eval(
     limit: int = 0,
     skip_ragas: bool = False,
 ) -> dict[str, Any]:
-    rows: list[dict] = []
-    with open(review_csv, "r", encoding="utf-8-sig") as handle:
-        rows.extend(csv.DictReader(handle))
-    if limit > 0:
-        rows = rows[:limit]
-
-    if not rows:
-        raise ValueError("BL-1 评测集为空")
+    rows, review_contract = load_formal_review_rows(review_csv, limit=limit)
+    references_reviewed = True
 
     logger.info(f"BL-1 加载题目: {len(rows)}")
     agent = _build_bl1_agent()
@@ -265,14 +261,21 @@ async def run_bl1_eval(
 
     details: list[dict] = []
     ragas_data: list[dict] = []
+    ragas_qids: list[str] = []
 
     for index, row in enumerate(rows, start=1):
         qid = row["question_id"]
         question = row["question"]
         target_doc_id = row["document_id"].strip()
+        raw_target_ids = (
+            row.get("acceptable_chunk_ids")
+            or row.get("actual_chunk_ids")
+            or row.get("context_id")
+            or ""
+        )
         target_chunk_ids = {
             value.strip()
-            for value in row["actual_chunk_ids"].split(";")
+            for value in raw_target_ids.split(";")
             if value.strip()
         }
 
@@ -294,6 +297,10 @@ async def run_bl1_eval(
                 }
             )
             answer, artifact, tool_call_count = _extract_answer_and_artifact(result)
+            if tool_call_count != 1:
+                raise ValueError(
+                    f"正式BL-1要求每题恰好一次检索，实际为{tool_call_count}次"
+                )
 
             documents = artifact.get("documents", [])
 
@@ -304,7 +311,7 @@ async def run_bl1_eval(
                     document.get("source_id")
                     or document.get("source", "")
                 )
-                if doc_hit_rank is None and target_doc_id in source_id:
+                if doc_hit_rank is None and target_doc_id == source_id:
                     doc_hit_rank = rank
                 if (
                     chunk_hit_rank is None
@@ -338,23 +345,33 @@ async def run_bl1_eval(
                 document.get("content", "")[:180].replace("\n", " ")
                 for document in documents
             )
+            result_row["retrieved_contexts_json"] = json.dumps(
+                contexts, ensure_ascii=False
+            )
             result_row["artifact_confidence"] = artifact.get(
                 "confidence", "?"
             )
-            result_row["answer"] = (
-                answer[:500] if answer else "（无回答）"
+            result_row["artifact_json"] = json.dumps(
+                artifact, ensure_ascii=False
             )
+            result_row["answer"] = answer if answer else "（无回答）"
             result_row["answer_chars"] = len(answer) if answer else 0
 
             if answer and contexts and not skip_ragas:
+                reference = (
+                    row.get("reference")
+                    or row.get("reference_candidate")
+                    or ""
+                ).strip()
                 ragas_data.append(
                     {
                         "question": question,
                         "answer": answer,
                         "contexts": contexts,
-                        "ground_truth": "",
+                        "ground_truth": reference if references_reviewed else "",
                     }
                 )
+                ragas_qids.append(qid)
                 result_row["ragas_queued"] = True
             else:
                 result_row["ragas_queued"] = False
@@ -370,18 +387,29 @@ async def run_bl1_eval(
     if ragas_data and not skip_ragas:
         logger.info(f"BL-1 Ragas 评分: {len(ragas_data)} 条")
         try:
+            metrics = [faithfulness]
+            if references_reviewed:
+                metrics.append(context_recall)
             ragas_result = ragas_evaluate(
                 dataset=HFDataset.from_list(ragas_data),
-                metrics=[faithfulness, answer_relevancy],
+                metrics=metrics,
                 llm=eval_llm,
-                embeddings=vector_embedding_service,
+                embeddings=get_vector_embedding_service(),
             )
-            for metric_name in ("faithfulness", "answer_relevancy"):
+            detail_by_qid = {row["question_id"]: row for row in details}
+            for metric_name in [item.name for item in metrics]:
                 raw_values = list(ragas_result[metric_name])
+                for qid, value in zip(ragas_qids, raw_values, strict=True):
+                    numeric = float(value) if value is not None else None
+                    detail_by_qid[qid][f"ragas_{metric_name}"] = (
+                        numeric
+                        if numeric is not None and math.isfinite(numeric)
+                        else None
+                    )
                 values = [
                     float(value)
                     for value in raw_values
-                    if value is not None
+                    if value is not None and math.isfinite(float(value))
                 ]
                 if values:
                     ragas_scores[metric_name] = {
@@ -405,6 +433,21 @@ async def run_bl1_eval(
         for row in details
         if row.get("context_rank")
     ]
+    chunk_recall_at_3 = sum(rank <= 3 for rank in chunk_hit_ranks) / question_count
+    chunk_recall_at_5 = sum(rank <= 5 for rank in chunk_hit_ranks) / question_count
+    chunk_mrr = sum(1.0 / rank for rank in chunk_hit_ranks) / question_count
+    for row in details:
+        rank = row.get("context_rank")
+        row["acceptable_chunk_recall_at_3"] = int(bool(rank and rank <= 3))
+        row["acceptable_chunk_recall_at_5"] = int(bool(rank and rank <= 5))
+        row["acceptable_chunk_reciprocal_rank"] = 1.0 / rank if rank else 0.0
+
+    required_ragas = () if skip_ragas else ("faithfulness", "context_recall")
+    completion = build_completion_status(
+        details,
+        expected_count=question_count,
+        required_ragas_metrics=required_ragas,
+    )
     id_based_metrics: dict[str, Any] = {
         "Doc-Hit": (
             f"{len(doc_hit_ranks)}/{question_count} = "
@@ -432,6 +475,9 @@ async def run_bl1_eval(
             else None
         ),
         "Chunk-Hit": f"{len(chunk_hit_ranks)}/{question_count}",
+        "Acceptable-Chunk-Recall@3": round(chunk_recall_at_3, 4),
+        "Acceptable-Chunk-Recall@5": round(chunk_recall_at_5, 4),
+        "Acceptable-Chunk-MRR": round(chunk_mrr, 4),
         "Chunk_mean_rank": (
             round(sum(chunk_hit_ranks) / len(chunk_hit_ranks), 1)
             if chunk_hit_ranks
@@ -445,15 +491,18 @@ async def run_bl1_eval(
         "ran_at": datetime.now(CST).isoformat(),
         "review_csv": review_csv,
         "question_count": question_count,
+        "evaluation_variant": "BL-1 Dense Top-5 unique chunks",
+        "review_contract": review_contract,
+        "completion": completion,
         "id_based_metrics": id_based_metrics,
         "ragas_metrics": ragas_scores,
         "notes": [
             "Evaluation variant: BL-1 Dense Top-5 unique chunks",
             "ID-based Hit@K: 标注的真实 Milvus 逻辑 chunk ID 是否在检索结果中",
+            "Recall@K: 任一可接受Chunk出现在前K条即记1，否则记0",
+            "MRR: 每题按1/首个可接受Chunk名次计分，未命中为0，再取平均",
             "Faithfulness: RAGAS LLM评判",
-            "Response Relevancy: RAGAS LLM评判",
-            "Context Recall: 待人工审核参考答案后启用",
-            "答案正确性: 待人工审核后启用",
+            "Context Recall: 仅在全部参考答案通过人工审核后启用",
         ],
     }
 
@@ -520,14 +569,25 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    asyncio.run(
-        run_bl1_eval(
-            review_csv=args.csv,
-            output_dir=args.output,
-            limit=args.limit,
-            skip_ragas=args.skip_ragas,
+    from app.core.milvus_client import milvus_manager
+    from app.services.vector_store_manager import vector_store_manager
+
+    try:
+        milvus_manager.connect(allow_collection_mutation=False)
+        vector_store_manager.initialize()
+        summary = asyncio.run(
+            run_bl1_eval(
+                review_csv=args.csv,
+                output_dir=args.output,
+                limit=args.limit,
+                skip_ragas=args.skip_ragas,
+            )
         )
-    )
+    finally:
+        vector_store_manager.shutdown()
+        milvus_manager.close()
+    if summary["completion"]["status"] != "valid":
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
